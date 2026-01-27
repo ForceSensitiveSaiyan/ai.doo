@@ -1,217 +1,574 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ai.doo | AI Microservices</title>
-    <meta
-      name="description"
-      content="ai.doo delivers AI-powered microservices including secure, internally hosted LLM RAG solutions, automation tools, and intelligent data insights."
-    />
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <header class="site-header">
-      <nav class="nav">
-        <div class="logo" aria-label="ai.doo">
-          <svg class="logo-mark" viewBox="0 0 64 64" role="img" aria-hidden="true">
-            <defs>
-              <linearGradient id="logo-gradient" x1="0" x2="1" y1="0" y2="1">
-                <stop offset="0%" stop-color="#1f5eff" />
-                <stop offset="100%" stop-color="#5b8bff" />
-              </linearGradient>
-            </defs>
-            <path
-              class="logo-head"
-              d="M32 8c-10.5 0-19 8.5-19 19 0 7.4 4.2 13.8 10.4 17l-.2 8.6c0 1.2 1 2.2 2.2 2.2h11.4c1.2 0 2.2-1 2.2-2.2v-6.4h6.2c4.1 0 7.4-3.3 7.4-7.4v-6.2C52.6 18.6 43.1 8 32 8z"
-            />
-            <path
-              class="logo-core"
-              d="M37.5 17.2c4.7 1.7 7.8 6.2 7.2 11.1-.5 4.7-4.1 8.5-8.9 9.2-6.1.9-11.5-3.8-11.5-9.8 0-6.8 6.6-12.7 13.2-10.5z"
-            />
-          </svg>
-          <span class="logo-wordmark"><span>ai</span>.doo</span>
-        </div>
-        <div class="nav-links">
-          <a href="#solutions">Solutions</a>
-          <a href="#platform">Platform</a>
-          <a href="#contact">Contact</a>
-        </div>
-        <button class="btn btn-outline">Learn More</button>
-      </nav>
-    </header>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ai.doo — Private AI products & bespoke solutions</title>
+  <meta name="description" content="ai.doo builds private, self-hosted AI products — and extends them into bespoke solutions. One example: PIKA (pikachat.biz)." />
 
-    <main>
-      <section class="hero">
-        <div class="hero-content">
-          <p class="eyebrow">AI Microservices</p>
-          <h1>AI-powered microservices for smarter businesses.</h1>
-          <p class="lead">
-            ai.doo delivers secure, internally hosted AI solutions that let teams
-            query documents, automate workflows, and unlock actionable insights
-            without compromising trust.
-          </p>
-          <div class="hero-actions">
-            <button class="btn btn-primary">Get Started</button>
-            <button class="btn btn-ghost">Learn More</button>
-          </div>
-          <div class="hero-stats">
-            <div>
-              <span>Private by design</span>
-              <strong>On-prem or VPC</strong>
-            </div>
-            <div>
-              <span>Modular delivery</span>
-              <strong>Microservice stack</strong>
-            </div>
-            <div>
-              <span>Fast time-to-value</span>
-              <strong>Weeks, not months</strong>
-            </div>
-          </div>
-        </div>
-        <div class="hero-card">
-          <div class="card-header">
-            <p>Flagship Solution</p>
-            <h3>LLM RAG for Internal Knowledge</h3>
-          </div>
-          <ul>
-            <li>Query internal documents securely.</li>
-            <li>Grounded responses with audit trails.</li>
-            <li>Data remains inside your environment.</li>
-          </ul>
-          <button class="btn btn-primary">Request a Demo</button>
-        </div>
-      </section>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
-      <section id="solutions" class="solutions">
-        <h2>Solutions built for clarity and trust</h2>
-        <p>
-          Our microservices are designed for enterprises that need modern AI
-          capabilities without compromising security or reliability.
-        </p>
-        <div class="solution-grid">
-          <article class="solution-card">
-            <h3>Internally hosted LLM RAG</h3>
-            <p>
-              Empower teams to search, analyze, and summarize internal documents
-              with a secure retrieval layer and on-prem LLM serving.
-            </p>
-            <a href="#contact">Learn more</a>
-          </article>
-          <article class="solution-card">
-            <h3>Modular AI microservices</h3>
-            <p>
-              Plug-and-play automation, workflow optimization, and intelligent
-              insights delivered as discrete, scalable services.
-            </p>
-            <a href="#contact">Explore modules</a>
-          </article>
-          <article class="solution-card">
-            <h3>Secure, scalable deployments</h3>
-            <p>
-              Deploy in your preferred environment with flexible security,
-              compliance controls, and infrastructure that grows with you.
-            </p>
-            <a href="#contact">See deployment options</a>
-          </article>
-        </div>
-      </section>
+  <style>
+    :root{
+      --bg:#fbfcfe;
+      --surface:#ffffff;
+      --ink:#0b1220;
+      --muted:#5f6b80;
+      --border:rgba(15,23,42,.10);
+      --border2:rgba(15,23,42,.07);
 
-      <section id="platform" class="platform">
-        <div class="platform-content">
-          <h2>Microservices that fit your stack</h2>
-          <p>
-            ai.doo integrates with your existing data sources, identity systems,
-            and governance policies. Launch quickly with composable services and
-            extend as your AI strategy evolves.
-          </p>
-          <div class="pill-group">
-            <span>Zero data exfiltration</span>
-            <span>Role-based access</span>
-            <span>Audit-ready outputs</span>
-            <span>Custom models</span>
-          </div>
-          <button class="btn btn-primary">Get Started</button>
-        </div>
-        <div class="platform-panel">
-          <div class="panel-item">
-            <h4>Data ingestion</h4>
-            <p>Connect files, knowledge bases, and APIs with secure pipelines.</p>
-          </div>
-          <div class="panel-item">
-            <h4>Retrieval layer</h4>
-            <p>Hybrid search and grounding to keep answers precise and reliable.</p>
-          </div>
-          <div class="panel-item">
-            <h4>Action services</h4>
-            <p>Automations, insights, and workflow agents tailored to your teams.</p>
-          </div>
-        </div>
-      </section>
+      --accent:#2563eb;   /* solid default */
+      --accent2:#7c3aed;  /* hero moments only */
 
-      <section id="contact" class="cta">
-        <div>
-          <h2>Ready to deploy trustworthy AI?</h2>
-          <p>
-            Talk to our team about a secure, internally hosted solution that
-            keeps your data in your control.
-          </p>
-        </div>
-        <div class="cta-actions">
-          <button class="btn btn-primary">Get Started</button>
-          <button class="btn btn-outline">Contact Sales</button>
-        </div>
-      </section>
-    </main>
+      --radius:20px;
+      --max:1120px;
+      --shadow:0 18px 55px rgba(2,8,23,.08);
+      --shadow2:0 10px 26px rgba(2,8,23,.06);
+    }
 
-    <footer class="site-footer">
-      <div class="footer-brand">
-        <div class="logo" aria-label="ai.doo">
-          <svg class="logo-mark" viewBox="0 0 64 64" role="img" aria-hidden="true">
-            <defs>
-              <linearGradient id="logo-gradient-footer" x1="0" x2="1" y1="0" y2="1">
-                <stop offset="0%" stop-color="#1f5eff" />
-                <stop offset="100%" stop-color="#5b8bff" />
-              </linearGradient>
-            </defs>
-            <path
-              class="logo-head"
-              d="M32 8c-10.5 0-19 8.5-19 19 0 7.4 4.2 13.8 10.4 17l-.2 8.6c0 1.2 1 2.2 2.2 2.2h11.4c1.2 0 2.2-1 2.2-2.2v-6.4h6.2c4.1 0 7.4-3.3 7.4-7.4v-6.2C52.6 18.6 43.1 8 32 8z"
-            />
-            <path
-              class="logo-core"
-              d="M37.5 17.2c4.7 1.7 7.8 6.2 7.2 11.1-.5 4.7-4.1 8.5-8.9 9.2-6.1.9-11.5-3.8-11.5-9.8 0-6.8 6.6-12.7 13.2-10.5z"
-            />
-          </svg>
-          <span class="logo-wordmark"><span>ai</span>.doo</span>
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(1000px 600px at 12% -10%, rgba(37,99,235,.08), transparent 60%),
+        radial-gradient(900px 520px at 92% 10%, rgba(124,58,237,.06), transparent 62%),
+        var(--bg);
+      line-height:1.55;
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:var(--max);margin:0 auto;padding:22px}
+
+    /* Header */
+    header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(251,252,254,.84);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--border2);
+    }
+    .nav{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:14px 22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:950;
+      letter-spacing:.2px;
+    }
+    .logoMark{
+      width:40px;height:40px;border-radius:14px;
+      display:grid;place-items:center;
+      background:rgba(2,8,23,.02);
+      border:1px solid rgba(15,23,42,.08);
+      overflow:hidden;
+    }
+    .logoMark img{width:34px;height:34px;display:block}
+
+    /* Wordmark */
+    .wordmark{
+      display:inline-flex;
+      align-items:baseline;
+      font-weight:950;
+      letter-spacing:-0.65px;
+      font-size:18px;
+      line-height:1;
+    }
+    .wm-ai,.wm-doo{color:var(--ink)}
+    .wm-dot{
+      width:8px;height:8px;border-radius:999px;
+      margin:0 6px 3px 6px;
+      background:var(--accent);
+      box-shadow:0 10px 18px rgba(37,99,235,.18);
+      display:inline-block;
+    }
+
+    nav{
+      display:flex;gap:18px;align-items:center;
+      color:rgba(2,8,23,.62);
+      font-weight:800;
+    }
+    nav a{
+      position:relative;
+      padding:8px 2px;
+      color:rgba(2,8,23,.62);
+      transition:color .15s ease;
+    }
+    nav a:hover{color:var(--ink)}
+    nav a::after{
+      content:"";
+      position:absolute;
+      left:0;right:0;bottom:3px;
+      height:2px;
+      background:var(--accent);
+      transform:scaleX(0);
+      transform-origin:left;
+      transition:transform .15s ease;
+      border-radius:999px;
+      opacity:.9;
+    }
+    nav a:hover::after{transform:scaleX(1)}
+
+    .navRight{display:flex;align-items:center;gap:10px}
+    .menuBtn{
+      display:none;
+      padding:10px 12px;border-radius:12px;
+      border:1px solid var(--border);
+      background:var(--surface);
+      font-weight:900;
+      color:var(--ink);
+    }
+    .mobileNav{
+      display:none;
+      border-top:1px solid var(--border2);
+      padding:10px 22px 14px;
+      max-width:var(--max);
+      margin:0 auto;
+    }
+    .mobileNav a{
+      display:block;
+      padding:10px 0;
+      color:var(--muted);
+      font-weight:850;
+      border-bottom:1px solid rgba(15,23,42,.06);
+    }
+    .mobileNav a:last-child{border-bottom:none}
+
+    /* Buttons */
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      padding:11px 16px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:var(--surface);
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+      white-space:nowrap;
+    }
+    .btn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(37,99,235,.22);
+      box-shadow:var(--shadow2);
+    }
+    .btn.primary{
+      border-color:transparent;
+      color:#fff;
+      background:var(--accent);
+      box-shadow:0 16px 34px rgba(37,99,235,.18);
+    }
+    .btn.primary:hover{box-shadow:0 20px 46px rgba(37,99,235,.22)}
+    .btn.subtle{
+      background:rgba(2,8,23,.01);
+      border-color:rgba(15,23,42,.10);
+      color:rgba(2,8,23,.78);
+    }
+    .btn.subtle:hover{border-color:rgba(15,23,42,.16)}
+
+    /* Hero */
+    .hero{
+      padding:78px 0 18px;
+      display:grid;
+      gap:18px;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:-60px -40px auto auto;
+      width:min(560px, 62vw);
+      height:min(560px, 62vw);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(37,99,235,.14), transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(124,58,237,.10), transparent 58%);
+      filter:blur(2px);
+      opacity:.55;
+      pointer-events:none;
+    }
+    .pill{
+      width:fit-content;
+      display:inline-flex;align-items:center;gap:10px;
+      padding:8px 12px;border-radius:999px;
+      border:1px solid rgba(37,99,235,.16);
+      background:rgba(37,99,235,.06);
+      color:rgba(2,8,23,.72);
+      font-size:13px;font-weight:950;
+      position:relative;
+    }
+    h1{
+      margin:0;
+      font-size:clamp(36px,4vw,60px);
+      line-height:1.02;
+      letter-spacing:-1.2px;
+      max-width:18ch;
+      position:relative;
+    }
+    .sub{
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(16px,1.35vw,18px);
+      max-width:80ch;
+      position:relative;
+    }
+    .ctaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;position:relative}
+
+    /* Sections */
+    .section{padding:72px 0 22px} /* studio breathing room */
+    .kicker{
+      margin:0 0 10px;
+      color:rgba(2,8,23,.55);
+      font-size:13px;
+      letter-spacing:.26px;
+      text-transform:uppercase;
+      font-weight:950;
+    }
+    .h2{
+      margin:0 0 10px;
+      font-size:30px;
+      letter-spacing:-.8px;
+      line-height:1.18;
+    }
+    .lead{
+      margin:0;
+      color:var(--muted);
+      max-width:82ch;
+      font-size:16px;
+    }
+
+    /* Grid/cards */
+    .grid{
+      display:grid;
+      gap:14px;
+      grid-template-columns:repeat(12,1fr);
+      margin-top:18px;
+    }
+    .card{
+      border:1px solid rgba(15,23,42,.08);
+      background:rgba(255,255,255,.92);
+      border-radius:20px;
+      padding:20px;
+      box-shadow:none;
+      transition:transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+    .card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(37,99,235,.18);
+      background:#fff;
+    }
+    .card h3{margin:2px 0 8px;font-size:16px;letter-spacing:-.2px}
+    .card p{margin:0;color:var(--muted);font-size:14px}
+
+    .span4{grid-column:span 4}
+    .span6{grid-column:span 6}
+    .span12{grid-column:span 12}
+
+    /* Chips */
+    .chips{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+    .chip{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:7px 10px;border-radius:999px;
+      border:1px solid rgba(15,23,42,.10);
+      background:rgba(2,8,23,.02);
+      color:rgba(2,8,23,.76);
+      font-size:13px;
+      font-weight:900;
+    }
+    .dot{
+      width:9px;height:9px;border-radius:999px;
+      background:var(--accent);
+      box-shadow:0 10px 18px rgba(37,99,235,.14);
+    }
+
+    /* Principle / proof band */
+    .proof{
+      margin-top:18px;
+      border:1px solid rgba(37,99,235,.14);
+      border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(37,99,235,.04), rgba(255,255,255,.70));
+      padding:18px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+    .proof .title{
+      font-weight:950;
+      color:var(--ink);
+      margin:0;
+      font-size:14px;
+      letter-spacing:-.2px;
+      min-width:220px;
+    }
+    .proof p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      max-width:90ch;
+    }
+
+    /* CTA band */
+    .ctaBand{
+      margin:46px 0 12px;
+      padding:18px;
+      border-radius:var(--radius);
+      border:1px solid rgba(37,99,235,.16);
+      background:
+        radial-gradient(900px 260px at 10% 10%, rgba(37,99,235,.10), transparent 55%),
+        radial-gradient(900px 260px at 90% 20%, rgba(124,58,237,.08), transparent 58%),
+        var(--surface);
+      box-shadow:var(--shadow);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+    .ctaBand .title{font-weight:950;font-size:18px;margin:0 0 4px}
+    .ctaBand .small{margin:0;color:var(--muted);font-size:13px}
+
+    footer{
+      border-top:1px solid rgba(15,23,42,.10);
+      padding:18px 0 38px;
+      color:var(--muted);
+      margin-top:28px;
+    }
+    .footerRow{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .footerCol a{color:var(--muted);font-weight:900}
+    .footerCol a:hover{color:var(--ink)}
+    .trustline{
+      margin:10px 0 0;
+      font-size:13px;
+      color:rgba(2,8,23,.65);
+    }
+
+    @media (max-width: 920px){
+      nav{display:none}
+      .menuBtn{display:inline-flex}
+      .span4,.span6{grid-column:span 12}
+      .ctaBand{flex-direction:column;align-items:flex-start}
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="nav">
+    <a class="brand" href="#top" aria-label="ai.doo home">
+      <span class="logoMark" aria-hidden="true" title="ai.doo">
+        <img src="aidoo_middle_vector_polished.svg" alt="" />
+      </span>
+
+      <span class="wordmark" aria-label="ai.doo">
+        <span class="wm-ai">ai</span><span class="wm-dot" aria-hidden="true"></span><span class="wm-doo">doo</span>
+      </span>
+    </a>
+
+    <nav aria-label="Primary navigation">
+      <a href="#what">What we do</a>
+      <a href="#how">How we work</a>
+      <a href="#pika">PIKA</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="navRight">
+      <button class="menuBtn" id="menuBtn" aria-expanded="false" aria-controls="mobileNav">Menu</button>
+      <a class="btn primary" href="#contact">Talk to us</a>
+    </div>
+  </div>
+
+  <div class="mobileNav" id="mobileNav">
+    <a href="#what">What we do</a>
+    <a href="#how">How we work</a>
+    <a href="#pika">PIKA</a>
+    <a href="#contact">Contact</a>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="pill">Private-by-default • Self-hosted • Built for ops</div>
+
+    <h1>Private AI products. Built for real environments.</h1>
+
+    <p class="sub">
+      ai.doo builds focused, self-hosted AI products — and extends them into bespoke private solutions when a tailored fit is needed.
+      <br><br>
+      One example is <strong>PIKA</strong>, a secure document Q&amp;A system powered by local AI.
+    </p>
+
+    <div class="ctaRow">
+      <a class="btn primary" href="#contact">Discuss a pilot</a>
+      <a class="btn subtle" href="#what">See what we do</a>
+    </div>
+  </section>
+
+  <!-- WHAT -->
+  <section class="section" id="what">
+    <p class="kicker">What we do</p>
+    <h2 class="h2">Simple capabilities for real internal problems</h2>
+    <p class="lead">
+      Pragmatic systems designed for privacy-first environments — and maintainable long after the demo.
+    </p>
+
+    <div class="grid">
+      <div class="card span4">
+        <h3>Private document intelligence</h3>
+        <p>Upload, index, and query internal documents using local AI — without sending data to the cloud.</p>
+        <div class="chips">
+          <span class="chip"><span class="dot"></span> RAG</span>
+          <span class="chip"><span class="dot"></span> Citations</span>
+          <span class="chip"><span class="dot"></span> Access control</span>
         </div>
-        <p>AI microservices built for trusted enterprise outcomes.</p>
       </div>
-      <div class="footer-links">
-        <div>
-          <h4>Company</h4>
-          <a href="#solutions">Solutions</a>
-          <a href="#platform">Platform</a>
-          <a href="#contact">Contact</a>
-        </div>
-        <div>
-          <h4>Contact</h4>
-          <span>hello@aidoo.biz</span>
-          <span>+1 (555) 210-9000</span>
-        </div>
-        <div>
-          <h4>Social</h4>
-          <a href="https://www.linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
-          <a href="https://www.x.com" target="_blank" rel="noreferrer">X</a>
-          <a href="https://www.github.com" target="_blank" rel="noreferrer">GitHub</a>
+
+      <div class="card span4">
+        <h3>Automation &amp; extraction</h3>
+        <p>Summarise documents, extract structured data, and build lightweight automations around real operational needs.</p>
+        <!-- Intentionally no chips here (studio rhythm) -->
+      </div>
+
+      <div class="card span4">
+        <h3>Self-hosted delivery</h3>
+        <p>Containerised deployments with clear configuration, sensible defaults, and practical performance guidance.</p>
+        <div class="chips">
+          <span class="chip"><span class="dot"></span> Docker</span>
+          <span class="chip"><span class="dot"></span> Local inference</span>
+          <span class="chip"><span class="dot"></span> Config-first</span>
         </div>
       </div>
-    </footer>
-  </body>
+    </div>
+
+    <div class="proof" aria-label="Positioning note">
+      <p class="title">Product-led, by design.</p>
+      <p>
+        We don’t pretend to have a catalogue. We build focused products — then extend them into bespoke, private solutions where a tailored fit is required.
+      </p>
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section class="section" id="how">
+    <p class="kicker">How we work</p>
+    <h2 class="h2">Fast pilots. Clear scope. No nonsense.</h2>
+    <p class="lead">
+      You’ll see a working pilot early, with measurable outcomes and a clear path to production that respects your constraints.
+    </p>
+
+    <div class="grid">
+      <div class="card span6">
+        <h3>1) Discover &amp; define</h3>
+        <p>Align on the use case, data sensitivity, hardware, and success criteria — in plain language.</p>
+      </div>
+      <div class="card span6">
+        <h3>2) Pilot in your environment</h3>
+        <p>Deploy where your data lives. See real behaviour — not a deck.</p>
+      </div>
+      <div class="card span6">
+        <h3>3) Harden for production</h3>
+        <p>Configuration, monitoring, performance tuning, and clear operational documentation.</p>
+      </div>
+      <div class="card span6">
+        <h3>4) Extend where needed</h3>
+        <p>Bespoke features and integrations layered on top of the product foundation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PIKA -->
+  <section class="section" id="pika">
+    <p class="kicker">Product example</p>
+    <h2 class="h2">PIKA</h2>
+    <p class="lead">
+      A self-hosted document intelligence product: upload documents, index them locally, and ask questions securely.
+    </p>
+
+    <div class="grid">
+      <div class="card span12">
+        <h3>pikachat.biz</h3>
+        <p style="margin-bottom:12px;">See how the ai.doo approach translates into a real, working product.</p>
+        <a class="btn primary" href="https://pikachat.biz" target="_blank" rel="noopener">Visit PIKA</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="ctaBand" id="contact">
+    <div>
+      <p class="title">Interested in a private AI pilot you can actually run?</p>
+      <p class="small">Email <strong>hello@aidoo.biz</strong> with a brief outline of your use case and environment.</p>
+    </div>
+    <div class="ctaRow" style="margin:0;">
+      <a class="btn primary" href="mailto:hello@aidoo.biz?subject=ai.doo%20Pilot%20Request">Email hello@aidoo.biz</a>
+      <a class="btn subtle" href="#what">What we do</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footerRow">
+      <div class="footerCol">
+        <div style="display:flex;align-items:center;gap:12px;font-weight:950;color:var(--ink);">
+          <span class="logoMark" aria-hidden="true">
+            <img src="aidoo_middle_vector_polished.svg" alt="" />
+          </span>
+          <span class="wordmark" aria-label="ai.doo">
+            <span class="wm-ai">ai</span><span class="wm-dot" aria-hidden="true"></span><span class="wm-doo">doo</span>
+          </span>
+        </div>
+
+        <p class="trustline">Self-hosted by default. No data sent to third-party clouds.</p>
+        <p style="margin:10px 0 0; font-size:13px;">© <span id="year"></span> aidoo.biz</p>
+      </div>
+
+      <div class="footerCol" style="font-size:13px;">
+        <div style="font-weight:950;color:var(--ink);margin-bottom:8px;">Navigate</div>
+        <div><a href="#what">What we do</a></div>
+        <div><a href="#how">How we work</a></div>
+        <div><a href="#pika">PIKA</a></div>
+      </div>
+
+      <div class="footerCol" style="font-size:13px;">
+        <div style="font-weight:950;color:var(--ink);margin-bottom:8px;">Contact</div>
+        <div><a href="mailto:hello@aidoo.biz">hello@aidoo.biz</a></div>
+        <div style="margin-top:6px;">
+          <a href="#" title="Replace with your LinkedIn URL">LinkedIn</a> •
+          <a href="#" title="Replace with your GitHub URL">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  const menuBtn = document.getElementById("menuBtn");
+  const mobileNav = document.getElementById("mobileNav");
+
+  menuBtn?.addEventListener("click", () => {
+    const isOpen = mobileNav.style.display === "block";
+    mobileNav.style.display = isOpen ? "none" : "block";
+    menuBtn.setAttribute("aria-expanded", String(!isOpen));
+  });
+
+  mobileNav?.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+    mobileNav.style.display = "none";
+    menuBtn.setAttribute("aria-expanded", "false");
+  }));
+</script>
+</body>
 </html>
