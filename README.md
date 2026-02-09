@@ -82,6 +82,10 @@ If you use a non-default branch:
 sudo git pull origin <branch>
 ```
 
+## CI/CD
+
+Pushes to `main` auto-deploy to the VPS via GitHub Actions (rsync over SSH).
+
 ## Notes
 
 - Caddy automatically provisions and renews TLS certificates.
