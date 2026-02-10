@@ -5,10 +5,26 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ai.doo — Private AI products & bespoke solutions</title>
   <meta name="description" content="ai.doo builds private, self-hosted AI products — and extends them into bespoke solutions for real environments." />
+  <link rel="canonical" href="https://aidoo.biz/">
+  <meta name="author" content="ai.doo">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ai.doo — Private AI products & bespoke solutions">
+  <meta property="og:description" content="ai.doo builds private, self-hosted AI products — and extends them into bespoke solutions for real environments.">
+  <meta property="og:url" content="https://aidoo.biz/">
+  <meta property="og:site_name" content="ai.doo">
+  <meta property="og:image" content="https://aidoo.biz/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ai.doo — Private AI products & bespoke solutions">
+  <meta name="twitter:description" content="Self-hosted AI tools, extended into bespoke private solutions.">
+  <meta name="twitter:image" content="https://aidoo.biz/og-image.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="any">
   <meta name="theme-color" content="#0b1020">
 
@@ -29,6 +45,25 @@
       --shadow:0 16px 48px rgba(0,0,0,.30);
       --shadow2:0 8px 24px rgba(0,0,0,.20);
     }
+
+    /* Skip link */
+    .skip-link{
+      position:absolute;top:-100%;left:16px;
+      padding:10px 18px;border-radius:10px;
+      background:var(--accent);color:#fff;
+      font-weight:600;font-size:14px;
+      z-index:100;
+      transition:top .15s ease;
+    }
+    .skip-link:focus{top:16px}
+
+    /* Focus */
+    .btn:focus-visible{
+      outline:2px solid var(--accent2);
+      outline-offset:2px;
+    }
+    nav a:focus-visible{color:var(--ink)}
+    nav a:focus-visible::after{transform:scaleX(1)}
 
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
@@ -85,7 +120,7 @@
     .wordmark{
       display:inline-flex;
       align-items:baseline;
-      font-weight:750;
+      font-weight:700;
       letter-spacing:-0.5px;
       font-size:18px;
       line-height:1;
@@ -101,7 +136,7 @@
     nav{
       display:flex;gap:20px;align-items:center;
       color:var(--muted);
-      font-weight:500;
+      font-weight:400;
       font-size:14px;
     }
     nav a{
@@ -135,17 +170,19 @@
       color:var(--ink);
     }
     .mobileNav{
-      display:none;
+      overflow:hidden;
+      max-height:0;
       border-top:1px solid var(--stroke);
-      padding:10px 24px 14px;
       max-width:var(--max);
       margin:0 auto;
+      transition:max-height .25s ease-out;
     }
+    .mobileNav.open{max-height:280px}
     .mobileNav a{
       display:block;
-      padding:10px 0;
+      padding:12px 24px;
       color:var(--muted);
-      font-weight:500;
+      font-weight:400;
       border-bottom:1px solid var(--stroke);
     }
     .mobileNav a:last-child{border-bottom:none}
@@ -187,7 +224,6 @@
     .hero{
       padding:100px 0 48px;
       display:grid;
-      gap:20px;
       position:relative;
     }
     .pill{
@@ -199,9 +235,10 @@
       color:var(--muted);
       font-size:13px;font-weight:600;
       position:relative;
+      margin:0 0 12px;
     }
     h1{
-      margin:0;
+      margin:0 0 24px;
       font-size:clamp(34px,3.8vw,56px);
       line-height:1.06;
       letter-spacing:-1px;
@@ -211,7 +248,7 @@
       color:#fff;
     }
     .h2{
-      margin:0 0 10px;
+      margin:0 0 16px;
       font-size:28px;
       letter-spacing:-.6px;
       line-height:1.2;
@@ -226,12 +263,12 @@
       position:relative;
       line-height:1.65;
     }
-    .ctaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;position:relative}
+    .ctaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;position:relative}
 
     /* Sections */
-    .section{padding:96px 0 40px}
+    .section{padding:80px 0 80px}
     .kicker{
-      margin:0 0 10px;
+      margin:0 0 8px;
       color:var(--muted);
       font-size:12px;
       letter-spacing:.3px;
@@ -249,7 +286,7 @@
     /* Grid/cards */
     .grid{
       display:grid;
-      gap:16px;
+      gap:20px;
       grid-template-columns:repeat(12,1fr);
       margin-top:24px;
     }
@@ -268,12 +305,13 @@
       box-shadow:0 12px 32px rgba(0,0,0,.30), 0 0 0 1px rgba(42,139,201,.10);
       background:var(--card2);
     }
-    .card h3{margin:2px 0 8px;font-size:15px;letter-spacing:-.15px;font-weight:650;color:#fff}
+    .card h3{margin:0 0 10px;font-size:15px;letter-spacing:-.15px;font-weight:700;color:#fff}
     .card p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
 
     .span4{grid-column:span 4}
     .span6{grid-column:span 6}
     .span12{grid-column:span 12}
+    .card.span12{padding:32px}
 
     /* Chips */
     .chips{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
@@ -297,14 +335,14 @@
       border:1px solid var(--stroke);
       border-radius:var(--radius);
       background:var(--card);
-      padding:20px;
+      padding:24px;
       display:flex;
-      gap:12px;
+      gap:16px;
       align-items:flex-start;
       flex-wrap:wrap;
     }
     .proof .title{
-      font-weight:650;
+      font-weight:700;
       color:#fff;
       margin:0;
       font-size:14px;
@@ -321,7 +359,7 @@
 
     /* CTA band */
     .ctaBand{
-      margin:64px 0 16px;
+      margin:64px 0 40px;
       padding:28px;
       border-radius:var(--radius);
       border:1px solid var(--stroke);
@@ -333,7 +371,7 @@
       gap:20px;
       flex-wrap:wrap;
     }
-    .ctaBand .title{font-weight:650;font-size:17px;margin:0 0 4px;color:#fff}
+    .ctaBand .title{font-weight:700;font-size:17px;margin:0 0 4px;color:#fff}
     .ctaBand .small{margin:0;color:var(--muted);font-size:13px}
 
     footer{
@@ -343,7 +381,7 @@
       margin-top:48px;
     }
     .footerRow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-    .footerCol a{color:var(--muted);font-weight:500}
+    .footerCol a{color:var(--muted);font-weight:400;display:inline-block;padding:3px 0}
     .footerCol a:hover{color:var(--ink)}
     .trustline{
       margin:10px 0 0;
@@ -352,10 +390,25 @@
     }
 
     @media (max-width: 920px){
+      .wrap{padding:20px}
       nav{display:none}
       .menuBtn{display:inline-flex}
       .span4,.span6{grid-column:span 12}
       .ctaBand{flex-direction:column;align-items:flex-start}
+    }
+
+    @media (prefers-reduced-motion:no-preference){
+      @keyframes fadeUp{
+        from{opacity:0;transform:translateY(12px)}
+        to{opacity:1;transform:translateY(0)}
+      }
+      .hero > *{
+        animation:fadeUp .45s ease both;
+      }
+      .hero > :nth-child(1){animation-delay:0s}
+      .hero > :nth-child(2){animation-delay:.08s}
+      .hero > :nth-child(3){animation-delay:.16s}
+      .hero > :nth-child(4){animation-delay:.24s}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -365,9 +418,27 @@
       }
     }
   </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "ai.doo",
+    "url": "https://aidoo.biz",
+    "logo": "https://aidoo.biz/favicon.svg",
+    "description": "ai.doo builds private, self-hosted AI products and bespoke solutions.",
+    "email": "hello@aidoo.biz",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "hello@aidoo.biz",
+      "contactType": "Sales"
+    }
+  }
+  </script>
 </head>
 
 <body>
+<a href="#top" class="skip-link">Skip to content</a>
 <header>
   <div class="nav">
     <a class="brand" href="#top" aria-label="ai.doo home">
@@ -536,14 +607,14 @@
       </div>
 
       <div class="footerCol" style="font-size:13px;">
-        <div style="font-weight:650;color:var(--ink);margin-bottom:8px;">Navigate</div>
+        <div style="font-weight:700;color:var(--ink);margin-bottom:8px;">Navigate</div>
         <div><a href="#what">What we do</a></div>
         <div><a href="#how">How we work</a></div>
         <div><a href="#pika">PIKA</a></div>
       </div>
 
       <div class="footerCol" style="font-size:13px;">
-        <div style="font-weight:650;color:var(--ink);margin-bottom:8px;">Contact</div>
+        <div style="font-weight:700;color:var(--ink);margin-bottom:8px;">Contact</div>
         <div><a href="mailto:hello@aidoo.biz">hello@aidoo.biz</a></div>
         <div style="margin-top:6px;">
           <a href="#" title="Replace with your LinkedIn URL">LinkedIn</a> &bull;
@@ -562,15 +633,23 @@
   const mobileNav = document.getElementById("mobileNav");
 
   menuBtn?.addEventListener("click", () => {
-    const isOpen = mobileNav.style.display === "block";
-    mobileNav.style.display = isOpen ? "none" : "block";
-    menuBtn.setAttribute("aria-expanded", String(!isOpen));
+    const isOpen = mobileNav.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded", String(isOpen));
   });
 
   mobileNav?.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
-    mobileNav.style.display = "none";
+    mobileNav.classList.remove("open");
     menuBtn.setAttribute("aria-expanded", "false");
   }));
+
+  document.addEventListener("click", (e) => {
+    if (mobileNav?.classList.contains("open") &&
+        !mobileNav.contains(e.target) &&
+        !menuBtn.contains(e.target)) {
+      mobileNav.classList.remove("open");
+      menuBtn.setAttribute("aria-expanded", "false");
+    }
+  });
 </script>
 </body>
 </html>
