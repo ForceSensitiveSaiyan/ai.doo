@@ -39,4 +39,32 @@
               --exclude='build-changelog.py' \
               --exclude='CHANGELOG.md' \
               --exclude='nul' \
+              --exclude='api/' \
               ./ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/aidoo.biz/
+
+  deploy-api:
+    needs: deploy
+    runs-on: ubuntu-latest
+    environment: VPS
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy API to VPS
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+          rsync -avz \
+            -e "ssh -i ~/.ssh/deploy_key" \
+            api/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/opt/aidoo-api/
+
+      - name: Install dependencies and restart service
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
+            "/opt/aidoo-api/venv/bin/pip install -q -r /opt/aidoo-api/requirements.txt && systemctl restart aidoo-api"

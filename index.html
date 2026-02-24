@@ -177,7 +177,7 @@
       margin:0 auto;
       transition:max-height .25s ease-out;
     }
-    .mobileNav.open{max-height:280px}
+    .mobileNav.open{max-height:320px}
     .mobileNav a{
       display:block;
       padding:12px 24px;
@@ -417,6 +417,126 @@
         animation-duration:0.01ms !important;
       }
     }
+
+    /* Journey steps */
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:40px}
+    .step{padding:0 28px 0 0;position:relative}
+    .step:not(:last-child)::after{content:"";position:absolute;top:22px;right:14px;width:1px;height:40px;background:var(--stroke)}
+    .step-num{font-size:13px;font-weight:700;color:var(--accent2);letter-spacing:.5px;margin-bottom:12px;text-transform:uppercase}
+    .step h3{font-size:15px;font-weight:700;color:#fff;margin:0 0 8px}
+    .step p{font-size:14px;color:var(--muted);margin:0;line-height:1.6}
+
+    /* Pricing */
+    .pricingCard{background:var(--card2);border-color:rgba(42,139,201,.30)}
+    .featureList{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:8px}
+    .featureList li{font-size:13px;color:var(--muted);padding-left:16px;position:relative;line-height:1.5}
+    .featureList li::before{content:"";position:absolute;left:0;top:6px;width:5px;height:5px;border-radius:999px;background:var(--accent2);opacity:.7}
+
+    /* Chat widget */
+    .chatFab{
+      position:fixed;bottom:24px;right:24px;z-index:200;
+      display:inline-flex;align-items:center;gap:8px;
+      padding:12px 20px;border-radius:999px;
+      border:none;background:var(--accent);
+      color:#fff;font-weight:600;font-size:14px;
+      cursor:pointer;
+      box-shadow:0 8px 24px rgba(42,139,201,.35);
+      transition:transform .16s ease-out,box-shadow .16s ease-out;
+      font-family:inherit;
+    }
+    .chatFab:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(42,139,201,.45)}
+    .chatFab:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+    .chatPanel{
+      position:fixed;bottom:80px;right:24px;z-index:200;
+      width:360px;max-width:calc(100vw - 32px);
+      border-radius:16px;
+      border:1px solid var(--stroke);
+      background:#111a33;
+      box-shadow:0 20px 60px rgba(0,0,0,.5);
+      display:flex;flex-direction:column;
+      overflow:hidden;
+      opacity:0;transform:translateY(12px) scale(.97);
+      pointer-events:none;
+      transition:opacity .2s ease,transform .2s ease;
+    }
+    .chatPanel.open{opacity:1;transform:none;pointer-events:auto}
+    .chatHead{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 16px;
+      border-bottom:1px solid var(--stroke);
+      background:rgba(255,255,255,.04);
+    }
+    .chatHead strong{font-size:14px;color:#fff;font-weight:700}
+    .chatClose{
+      background:none;border:none;color:var(--muted);
+      font-size:18px;cursor:pointer;padding:4px 6px;border-radius:6px;
+      line-height:1;font-family:inherit;
+      transition:color .15s ease;
+    }
+    .chatClose:hover{color:#fff}
+    .chatClose:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+    .chatMessages{
+      flex:1;overflow-y:auto;padding:16px;
+      display:flex;flex-direction:column;gap:12px;
+      min-height:200px;max-height:320px;
+    }
+    .chatMsg{
+      max-width:85%;padding:10px 14px;border-radius:12px;
+      font-size:13px;line-height:1.55;
+    }
+    .chatMsg.assistant{
+      background:var(--card2);
+      border:1px solid var(--stroke);
+      color:var(--ink);
+      align-self:flex-start;
+      border-radius:4px 12px 12px 12px;
+    }
+    .chatMsg.user{
+      background:var(--accent);
+      color:#fff;
+      align-self:flex-end;
+      border-radius:12px 4px 12px 12px;
+    }
+    .chatMsg.typing{color:var(--muted);font-style:italic}
+    .chatInputRow{
+      display:flex;gap:8px;
+      padding:12px 16px;
+      border-top:1px solid var(--stroke);
+      background:rgba(255,255,255,.03);
+    }
+    .chatInput{
+      flex:1;background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius:8px;
+      padding:9px 12px;
+      color:var(--ink);
+      font-size:13px;
+      font-family:inherit;
+      resize:none;
+      outline:none;
+      min-height:38px;max-height:80px;
+      line-height:1.4;
+      transition:border-color .15s ease;
+    }
+    .chatInput:focus{border-color:rgba(42,139,201,.45)}
+    .chatSend{
+      background:var(--accent);border:none;
+      color:#fff;font-weight:600;font-size:13px;
+      padding:9px 14px;border-radius:8px;
+      cursor:pointer;white-space:nowrap;
+      font-family:inherit;
+      transition:background .15s ease;
+    }
+    .chatSend:hover{background:#2070a8}
+    .chatSend:disabled{opacity:.5;cursor:not-allowed}
+    .chatSend:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+
+    @media (max-width:920px){
+      .steps{grid-template-columns:1fr;gap:24px}
+      .step:not(:last-child)::after{display:none}
+      .step{padding:0;border-left:2px solid var(--stroke);padding-left:20px}
+      .chatPanel{bottom:72px}
+    }
   </style>
 
   <script type="application/ld+json">
@@ -454,6 +574,7 @@
     <nav aria-label="Primary navigation">
       <a href="#what">What we do</a>
       <a href="#how">How we work</a>
+      <a href="#pricing">Pricing</a>
       <a href="#pika">PIKA</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -467,6 +588,7 @@
   <div class="mobileNav" id="mobileNav">
     <a href="#what">What we do</a>
     <a href="#how">How we work</a>
+    <a href="#pricing">Pricing</a>
     <a href="#pika">PIKA</a>
     <a href="#contact">Contact</a>
   </div>
@@ -541,22 +663,81 @@
       A working pilot early, with measurable outcomes and a clear path to production.
     </p>
 
-    <div class="grid">
-      <div class="card span6">
-        <h3>1. Discover &amp; define</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Discover &amp; define</h3>
         <p>Align on the use case, data sensitivity, and success criteria — in plain language.</p>
       </div>
-      <div class="card span6">
-        <h3>2. Pilot in your environment</h3>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Pilot in your environment</h3>
         <p>Deploy where your data lives. See real behaviour, not a deck.</p>
       </div>
-      <div class="card span6">
-        <h3>3. Harden for production</h3>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Harden for production</h3>
         <p>Configuration, monitoring, performance tuning, and clear documentation.</p>
       </div>
-      <div class="card span6">
-        <h3>4. Extend where needed</h3>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h3>Extend where needed</h3>
         <p>Bespoke features and integrations on top of the product foundation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section" id="pricing">
+    <p class="kicker">Pricing</p>
+    <h2 class="h2">Simple, honest engagement models.</h2>
+    <p class="lead">
+      We work from discovery through to production. Scope is always agreed upfront.
+    </p>
+
+    <div class="grid">
+      <div class="card span4">
+        <div class="step-num">Discovery</div>
+        <h3>Free initial call</h3>
+        <p>No obligation. Understand your environment and goals. We'll tell you honestly if we're a good fit.</p>
+        <ul class="featureList">
+          <li>30–60 minute conversation</li>
+          <li>Your use case and constraints</li>
+          <li>Clear next-step recommendation</li>
+        </ul>
+        <div style="margin-top:20px;">
+          <a class="btn" href="mailto:hello@aidoo.biz?subject=Discovery%20call">Email us</a>
+        </div>
+      </div>
+
+      <div class="card span4 pricingCard">
+        <div class="step-num">Pilot</div>
+        <h3>A working system in your environment</h3>
+        <p>Fixed scope, measurable outcome. Pricing on request.</p>
+        <ul class="featureList">
+          <li>Deployed in your infrastructure</li>
+          <li>Real data, real behaviour</li>
+          <li>Defined success criteria</li>
+          <li>Handover documentation</li>
+        </ul>
+        <div style="margin-top:20px;">
+          <a class="btn primary" href="mailto:hello@aidoo.biz?subject=Pilot%20discussion">Discuss a pilot</a>
+        </div>
+      </div>
+
+      <div class="card span4">
+        <div class="step-num">Production</div>
+        <h3>Full build &amp; ongoing support</h3>
+        <p>Complete solution with documentation and ongoing support. Custom scope agreed after pilot.</p>
+        <ul class="featureList">
+          <li>Full production deployment</li>
+          <li>Monitoring and maintenance</li>
+          <li>Bespoke extensions</li>
+          <li>Ongoing support agreement</li>
+        </ul>
+        <div style="margin-top:20px;">
+          <a class="btn" href="mailto:hello@aidoo.biz?subject=Production%20enquiry">Get in touch</a>
+        </div>
       </div>
     </div>
   </section>
@@ -613,6 +794,7 @@
         <div style="font-weight:700;color:var(--ink);margin-bottom:8px;">Navigate</div>
         <div><a href="#what">What we do</a></div>
         <div><a href="#how">How we work</a></div>
+        <div><a href="#pricing">Pricing</a></div>
         <div><a href="#pika">PIKA</a></div>
         <div><a href="/privacy/">Privacy policy</a></div>
       </div>
@@ -629,6 +811,26 @@
   </footer>
 
 </main>
+
+<!-- CHAT WIDGET -->
+<button class="chatFab" id="chatFab" aria-label="Open chat" aria-expanded="false" aria-controls="chatPanel">
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1C4.134 1 1 3.91 1 7.5c0 1.57.58 3.01 1.55 4.13L1.5 14.5l3.26-.87A7.17 7.17 0 0 0 8 14c3.866 0 7-2.91 7-6.5S11.866 1 8 1Z" fill="currentColor"/></svg>
+  Ask us
+</button>
+
+<div class="chatPanel" id="chatPanel" role="dialog" aria-modal="true" aria-label="Chat with ai.doo">
+  <div class="chatHead">
+    <strong>Ask ai.doo</strong>
+    <button class="chatClose" id="chatClose" aria-label="Close chat">&#x2715;</button>
+  </div>
+  <div class="chatMessages" id="chatMessages" aria-live="polite" aria-atomic="false">
+    <div class="chatMsg assistant">Hi! Ask me anything about ai.doo, PIKA, or how we work.</div>
+  </div>
+  <div class="chatInputRow">
+    <textarea class="chatInput" id="chatInput" placeholder="Type a message…" rows="1" aria-label="Your message"></textarea>
+    <button class="chatSend" id="chatSend">Send</button>
+  </div>
+</div>
 
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
@@ -654,6 +856,88 @@
       menuBtn.setAttribute("aria-expanded", "false");
     }
   });
+
+  // Chat widget
+  (function() {
+    const fab = document.getElementById("chatFab");
+    const panel = document.getElementById("chatPanel");
+    const closeBtn = document.getElementById("chatClose");
+    const input = document.getElementById("chatInput");
+    const sendBtn = document.getElementById("chatSend");
+    const messages = document.getElementById("chatMessages");
+
+    function openChat() {
+      panel.classList.add("open");
+      fab.setAttribute("aria-expanded", "true");
+      input.focus();
+    }
+
+    function closeChat() {
+      panel.classList.remove("open");
+      fab.setAttribute("aria-expanded", "false");
+      fab.focus();
+    }
+
+    fab.addEventListener("click", () => {
+      panel.classList.contains("open") ? closeChat() : openChat();
+    });
+
+    closeBtn.addEventListener("click", closeChat);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && panel.classList.contains("open")) closeChat();
+    });
+
+    function appendMsg(role, text) {
+      const div = document.createElement("div");
+      div.className = "chatMsg " + role;
+      div.textContent = text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+      return div;
+    }
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = "";
+      input.style.height = "";
+      sendBtn.disabled = true;
+      appendMsg("user", text);
+      const typing = appendMsg("assistant typing", "…");
+      try {
+        const res = await fetch("https://aidoo.biz/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text })
+        });
+        const data = await res.json();
+        typing.className = "chatMsg assistant";
+        typing.textContent = data.reply || "Sorry, I couldn't get a response.";
+      } catch {
+        typing.className = "chatMsg assistant";
+        typing.textContent = "Sorry, something went wrong. Try emailing hello@aidoo.biz.";
+      } finally {
+        sendBtn.disabled = false;
+        messages.scrollTop = messages.scrollHeight;
+        input.focus();
+      }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    input.addEventListener("input", function() {
+      this.style.height = "";
+      this.style.height = Math.min(this.scrollHeight, 80) + "px";
+    });
+  })();
 </script>
 </body>
 </html>
