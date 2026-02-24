@@ -4,6 +4,8 @@
 
 Pure static HTML/CSS/JS site — no framework, no build tool, no bundler. Every page is a hand-authored HTML file with inline `<style>` blocks. Changes deploy automatically via GitHub Actions → rsync to VPS.
 
+There is also a small Python/Flask backend (`api/`) that powers the chat widget. It runs as a systemd service on the VPS, proxied through Caddy.
+
 ## Pages and paths
 
 | URL path | File |
@@ -12,6 +14,7 @@ Pure static HTML/CSS/JS site — no framework, no build tool, no bundler. Every 
 | `/pika/` | `pika/index.html` |
 | `/pika/changelog` | `pika/changelog.html` |
 | `/privacy/` | `privacy/index.html` |
+| `/privacy-pomodorable/` | `privacy-pomodorable/index.html` |
 
 ## Design system
 
@@ -54,53 +57,66 @@ background:
 - **Buttons**: `.btn` (ghost), `.btn.primary` (filled accent), `.btn.subtle` (transparent)
 - **Chips**: pill-shaped labels with `--accent2` dot indicator
 - **Footer**: `.footerRow` flex row with `.footerCol` columns
+- **Steps**: `.steps` 4-column grid, `.step` with `.step-num` label in `--accent2`; connector line via `::after`
+- **Pricing cards**: `.pricingTier` (flex-column to pin CTA to bottom), `.pricingCard` (highlighted variant), `.featureList` (bullet list with accent dots)
+- **Chat widget**: `.chatFab` (fixed FAB), `.chatPanel` (fixed panel, toggled with `.open`), `.chatMsg.user` / `.chatMsg.assistant`
 
 ## Conventions
 - Dark theme only — no light mode
 - No external CSS frameworks
 - Favicon: `favicon.svg` (SVG, referenced as `../favicon.svg` from subdirectories)
 - Copyright year injected via `document.getElementById("year").textContent = new Date().getFullYear()`
-- Legal pages use `<meta name="robots" content="noindex">`
+- Legal/privacy pages use `<meta name="robots" content="noindex">`
 
 ## Deployment
 
-Push to `main` → GitHub Actions workflow → `rsync` to `/var/www/aidoo.biz/` on the VPS. No build step. New directories (e.g. `privacy/`) are picked up automatically.
+Two-job GitHub Actions workflow on push to `main`:
+
+1. **`deploy`** — fetches PIKA changelog, builds `pika/changelog.html`, rsyncs static files to `/var/www/aidoo.biz/` (excludes `api/` and other non-web files)
+2. **`deploy-api`** (runs after `deploy`) — rsyncs `api/` to `/opt/aidoo-api/`, pip-installs requirements, restarts the `aidoo-api` systemd service
+
+## Chat API backend (`api/`)
+
+- **`api/chat.py`** — Flask app, `POST /api/chat`, uses `gpt-4o-mini`, CORS restricted to `aidoo.biz`
+- **`api/requirements.txt`** — `flask`, `openai`, `gunicorn`
+- Runs as a systemd service (`aidoo-api`) on the VPS at `127.0.0.1:8765`
+- Caddy proxies `location /api/*` to the service
+- `OPENAI_API_KEY` stored in `/etc/aidoo-api.env` on VPS and as a GitHub Actions secret
+
+### VPS one-time setup
+1. `python3 -m venv /opt/aidoo-api/venv && pip install flask openai gunicorn`
+2. Create `/etc/aidoo-api.env` with `OPENAI_API_KEY=...`
+3. Install systemd unit at `/etc/systemd/system/aidoo-api.service`
+4. Add `reverse_proxy /api/* localhost:8765` to Caddy vhost
+5. Add sudoers rule so deploy user can `sudo systemctl restart aidoo-api`
 
 ## Products
 
 ### PIKA
-- Self-hosted document intelligence application
+- Self-hosted document intelligence application — designed to be deployed within an organisation's own infrastructure
 - Runs entirely within the customer's own infrastructure — ai.doo never receives or stores customer data
-- Has (or is in the process of getting) an Android app on the **Google Play Store**
-- Android app may request device storage (document selection) and camera permissions; all processing is local
+- No cloud dependency; uses local inference models
+- Features: RAG, citations, access control, multi-user support
 - No user accounts currently; account/deletion flows are planned for future versions
 - Marketing/landing page at `/pika/` with a changelog at `/pika/changelog`
 - Changelog is auto-generated on deploy (built by the GitHub Actions workflow)
 
-## Privacy policy (`/privacy/`)
+### Pomodorable
+- Android focus/productivity app by Aidoo Systems
+- Uses Notification Listener Service, Do Not Disturb control, Firebase Analytics, Firebase Crashlytics, Google AdMob
+- Privacy policy at `/privacy-pomodorable/`
 
-File: `privacy/index.html`
+## Privacy policies
 
-Sections (as of Feb 2026):
-1. Introduction
-2. Information we collect (server access logs only)
-3. Google Fonts (only meaningful third-party data touch-point)
-4. Our apps (PIKA) — includes Android permissions disclosure
-5. Cookies (none set)
-6. How we use information
-7. Data retention (logs ~90 days)
-8. Your rights (IOM DPA 2018)
-9. Contact
-10. Changes to this policy
-11. Data deletion (Google Play requirement)
+| File | URL | Covers |
+|------|-----|--------|
+| `privacy/index.html` | `/privacy/` | aidoo.biz website and PIKA |
+| `privacy-pomodorable/index.html` | `/privacy-pomodorable/` | Pomodorable Android app |
 
-Key notes:
-- IOM Data Protection Act 2018 is explicitly called out as equivalent to UK GDPR and EU GDPR — important for Google Play reviewers
-- Policy covers both the website and mobile applications on the Google Play Store
-- Page uses `<meta name="robots" content="noindex">`
+Both pages use `<meta name="robots" content="noindex">`.
 
 ## Key contacts / identity
-- Trading as: **ai.doo**
+- Trading as: **ai.doo** / **Aidoo Systems**
 - Domain: `aidoo.biz`
 - Contact email: `hello@aidoo.biz`
 - Jurisdiction: Isle of Man — Data Protection Act 2018 (equivalent to UK GDPR and EU GDPR)
