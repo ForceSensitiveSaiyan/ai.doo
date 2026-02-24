@@ -67,4 +67,4 @@
             SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
           run: |
             ssh -i ~/.ssh/deploy_key ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-              "/opt/aidoo-api/venv/bin/pip install -q -r /opt/aidoo-api/requirements.txt && systemctl restart aidoo-api"
+              "/opt/aidoo-api/venv/bin/pip install -q -r /opt/aidoo-api/requirements.txt && sudo systemctl restart aidoo-api"
