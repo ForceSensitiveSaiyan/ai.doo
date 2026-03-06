@@ -17,9 +17,7 @@ import re
 import sys
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_CHANGELOG = os.path.normpath(
-    os.path.join(SCRIPT_DIR, "..", "pika", "CHANGELOG.md")
-)
+DEFAULT_CHANGELOG = os.path.join(SCRIPT_DIR, "CHANGELOG.md")
 TARGET = os.path.join(SCRIPT_DIR, "pika", "changelog.html")
 START_MARKER = "<!-- CHANGELOG_START -->"
 END_MARKER = "<!-- CHANGELOG_END -->"

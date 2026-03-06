@@ -135,6 +135,18 @@ curl -s -X POST https://aidoo.biz/api/chat \
   -d '{"message":"What is PIKA?"}' | python3 -m json.tool
 ```
 
+## Tests
+
+The repo includes tests for the changelog builder and chat API:
+
+```bash
+python -m pip install flask openai pytest
+python -m pytest tests/ -v
+```
+
+- `tests/test_changelog.py` — markdown rendering, inline formatting, edge cases (15 tests)
+- `tests/test_chat.py` — endpoint validation, rate limiting, CORS, error handling (11 tests)
+
 ## Manual deploy
 
 If needed, you can bypass the workflow and deploy manually:

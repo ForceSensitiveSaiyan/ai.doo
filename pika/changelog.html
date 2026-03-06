@@ -259,6 +259,35 @@
     .footerInner a{color:var(--muted)}
     .footerInner a:hover{color:var(--ink)}
 
+    .menuBtn{
+      display:none;
+      padding:10px 12px;border-radius:10px;
+      border:1px solid var(--stroke);
+      background:var(--card2);
+      font-weight:600;
+      color:var(--ink);
+      cursor:pointer;
+      font-family:inherit;
+      font-size:14px;
+    }
+    .mobileNav{
+      overflow:hidden;
+      max-height:0;
+      border-top:1px solid var(--stroke);
+      max-width:var(--max);
+      margin:0 auto;
+      transition:max-height .25s ease-out;
+    }
+    .mobileNav.open{max-height:320px}
+    .mobileNav a{
+      display:block;
+      padding:12px 24px;
+      color:var(--muted);
+      font-weight:400;
+      border-bottom:1px solid var(--stroke);
+    }
+    .mobileNav a:last-child{border-bottom:none}
+
     @media (max-width: 920px){
       .wrap{padding:20px}
       nav{display:none}
@@ -286,10 +315,17 @@
     </a>
 
     <div class="navRight">
+      <button class="menuBtn" id="menuBtn" aria-expanded="false" aria-controls="mobileNav">Menu</button>
       <a class="btn primary" href="./">Visit PIKA</a>
     </div>
   </div>
 
+  <div class="mobileNav" id="mobileNav">
+    <a href="https://aidoo.biz/">Home</a>
+    <a href="https://aidoo.biz/#what">What we do</a>
+    <a href="https://aidoo.biz/#pricing">Pricing</a>
+    <a href="./">PIKA</a>
+  </div>
 </header>
 
 <main class="wrap">
@@ -402,6 +438,19 @@
 
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
+
+  const menuBtn = document.getElementById("menuBtn");
+  const mobileNav = document.getElementById("mobileNav");
+
+  menuBtn?.addEventListener("click", () => {
+    const isOpen = mobileNav.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded", String(isOpen));
+  });
+
+  mobileNav?.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+    mobileNav.classList.remove("open");
+    menuBtn.setAttribute("aria-expanded", "false");
+  }));
 </script>
 </body>
 </html>

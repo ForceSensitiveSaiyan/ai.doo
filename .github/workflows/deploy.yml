@@ -34,7 +34,10 @@
               -e "ssh -i ~/.ssh/deploy_key" \
               --exclude='.git' \
               --exclude='.github' \
+              --exclude='.claude' \
               --exclude='README.md' \
+              --exclude='CLAUDE.md' \
+              --exclude='tests/' \
               --exclude='logo_designs.png' \
               --exclude='build-changelog.py' \
               --exclude='CHANGELOG.md' \
