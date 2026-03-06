@@ -15,7 +15,7 @@
           run: |
             curl -sf -H "Authorization: token ${{ secrets.PIKA_REPO_TOKEN }}" \
               -H "Accept: application/vnd.github.v3.raw" \
-              "https://api.github.com/repos/ForceSensitiveSaiyan/pika/contents/CHANGELOG.md" \
+              "https://api.github.com/repos/aidoo-systems/pika/contents/CHANGELOG.md" \
               -o CHANGELOG.md
 
         - name: Build changelog page
