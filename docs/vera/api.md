@@ -523,6 +523,9 @@ curl -N http://localhost:4000/documents/{document_id}/status/stream \
   -b "vera_session=YOUR_SESSION_COOKIE"
 ```
 
+!!! note "Cross-origin SSE"
+    The `EventSource` browser API does not support custom headers. When the frontend runs on a different origin from the backend, authentication relies on cookies sent with `withCredentials: true`. Ensure `CORS_ORIGINS` includes the frontend origin.
+
 **Query parameters:**
 
 | Parameter | Default | Description |

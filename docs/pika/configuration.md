@@ -26,8 +26,8 @@ PIKA is configured via environment variables, loaded through [pydantic-settings]
 
 | Variable | Default | Description |
 |---|---|---|
-| `CHUNK_SIZE` | `500` | Token chunk size for document splitting (100 -- 10,000) |
-| `CHUNK_OVERLAP` | `50` | Overlap tokens between consecutive chunks |
+| `CHUNK_SIZE` | `500` | Character chunk size for document splitting (100 -- 10,000) |
+| `CHUNK_OVERLAP` | `50` | Overlap characters between consecutive chunks |
 | `TOP_K` | `5` | Number of chunks to retrieve per query (1 -- 50) |
 | `EMBEDDING_MODEL` | `all-MiniLM-L6-v2` | Sentence Transformer model for embeddings |
 
@@ -57,7 +57,7 @@ PIKA is configured via environment variables, loaded through [pydantic-settings]
 | `HUB_BASE_URL` | _(empty)_ | Hub service URL (e.g., `http://hub:8000`). Set both Hub variables to enable centralised auth |
 | `HUB_AUTH_API_KEY` | _(empty)_ | API key for Hub authentication. Supports Docker secrets |
 
-When both `HUB_BASE_URL` and `HUB_AUTH_API_KEY` are set, PIKA delegates user authentication and license validation to Hub.
+When both `HUB_BASE_URL` and `HUB_AUTH_API_KEY` are set, PIKA delegates user authentication and license validation to Hub. Without Hub, PIKA falls back to local authentication using `PIKA_ADMIN_PASSWORD`. Hub integration is **required** for multi-user environments and license enforcement.
 
 ### Query Queue
 

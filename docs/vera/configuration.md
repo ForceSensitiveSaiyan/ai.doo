@@ -52,6 +52,12 @@ VERA is configured through environment variables, typically set in a `.env` file
 !!! warning "Authentication behavior"
     When `HUB_BASE_URL` is not set or Hub is unreachable, VERA runs in **open mode** with no authentication. Set both `HUB_BASE_URL` and `HUB_AUTH_API_KEY` for production deployments.
 
+### Security
+
+| Variable | Default | Description |
+|---|---|---|
+| `SECURE_COOKIES` | `true` | Set session cookies with `Secure` flag. Disable (`false`) for local HTTP-only development |
+
 ### Networking & CORS
 
 | Variable | Default | Description |

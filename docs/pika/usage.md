@@ -58,7 +58,7 @@ curl http://localhost:8000/api/v1/query/status \
   -H "X-API-Key: your-api-key"
 ```
 
-Or use the streaming endpoint for real-time token delivery:
+Or use the streaming endpoint for real-time token delivery. Note that streaming queries bypass the FIFO queue and run immediately — use the standard endpoint above if you need queue-based concurrency control:
 
 ```bash
 curl -N http://localhost:8000/api/v1/query/stream \
