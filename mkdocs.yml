@@ -1,0 +1,69 @@
+site_name: ai.doo Documentation
+site_url: https://docs.aidoo.biz
+site_description: Documentation for the ai.doo self-hosted AI suite — PIKA, VERA, and Hub.
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - toc:
+      permalink: true
+  - tables
+
+nav:
+  - Getting Started: index.md
+  - Installation:
+      - Requirements: installation/requirements.md
+      - Quick Start: installation/quick-start.md
+      - Installer Script: installation/installer.md
+  - PIKA:
+      - Overview: pika/overview.md
+      - Configuration: pika/configuration.md
+      - Usage: pika/usage.md
+      - API Reference: pika/api.md
+  - VERA:
+      - Overview: vera/overview.md
+      - Configuration: vera/configuration.md
+      - Usage: vera/usage.md
+      - API Reference: vera/api.md
+  - Admin Guide:
+      - Hub: admin/hub.md
+      - User Management: admin/user-management.md
+      - Licensing: admin/licensing.md
+      - Reverse Proxy: admin/reverse-proxy.md
+      - Backup & Restore: admin/backup-restore.md
+      - Monitoring: admin/monitoring.md
+  - Troubleshooting: troubleshooting.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/aidoo-biz
+
+copyright: Copyright &copy; 2026 ai.doo Ltd

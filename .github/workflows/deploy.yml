@@ -21,7 +21,12 @@
         - name: Build changelog page
           run: python build-changelog.py --changelog CHANGELOG.md
 
-        - name: Deploy via rsync
+        - name: Build docs site
+          run: |
+            pip install mkdocs-material
+            mkdocs build -f mkdocs.yml -d _docs_build
+
+        - name: Set up SSH
           env:
             SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
           run: |
@@ -30,6 +35,8 @@
             chmod 600 ~/.ssh/deploy_key
             ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
+        - name: Deploy main site via rsync
+          run: |
             rsync -avz --delete \
               -e "ssh -i ~/.ssh/deploy_key" \
               --exclude='.git' \
@@ -43,7 +50,16 @@
               --exclude='CHANGELOG.md' \
               --exclude='nul' \
               --exclude='api/' \
+              --exclude='docs/' \
+              --exclude='mkdocs.yml' \
+              --exclude='_docs_build/' \
               ./ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/aidoo.biz/
+
+        - name: Deploy docs site via rsync
+          run: |
+            rsync -avz --delete \
+              -e "ssh -i ~/.ssh/deploy_key" \
+              _docs_build/ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/docs.aidoo.biz/
 
     deploy-api:
       needs: deploy

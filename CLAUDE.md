@@ -13,6 +13,7 @@ There is also a small Python/Flask backend (`api/`) that powers the chat widget.
 | `/` | `index.html` |
 | `/pika/` | `pika/index.html` |
 | `/pika/changelog` | `pika/changelog.html` |
+| `/vera/` | `vera/index.html` |
 | `/privacy/` | `privacy/index.html` |
 | `/privacy-pomodorable/` | `privacy-pomodorable/index.html` |
 
@@ -68,11 +69,20 @@ background:
 - Copyright year injected via `document.getElementById("year").textContent = new Date().getFullYear()`
 - Legal/privacy pages use `<meta name="robots" content="noindex">`
 
+## Docs site (`docs.aidoo.biz`)
+
+MkDocs Material site at `docs/` + `mkdocs.yml`. Built automatically during deploy.
+
+- Source: `docs/` (Markdown), `mkdocs.yml` (config)
+- Build: `mkdocs build -f mkdocs.yml` → `_docs_build/`
+- Deploy target: `/var/www/docs.aidoo.biz/` on VPS
+- Caddy vhost must be configured manually on VPS to serve `docs.aidoo.biz`
+
 ## Deployment
 
 Two-job GitHub Actions workflow on push to `main`:
 
-1. **`deploy`** — fetches PIKA changelog, builds `pika/changelog.html`, rsyncs static files to `/var/www/aidoo.biz/` (excludes `api/` and other non-web files)
+1. **`deploy`** — fetches PIKA changelog, builds `pika/changelog.html`, builds MkDocs docs site, rsyncs static files to `/var/www/aidoo.biz/` (excludes `api/`, `docs/`, and other non-web files), rsyncs built docs to `/var/www/docs.aidoo.biz/`
 2. **`deploy-api`** (runs after `deploy`) — rsyncs `api/` to `/opt/aidoo-api/`, pip-installs requirements, restarts the `aidoo-api` systemd service
 
 ## Chat API backend (`api/`)
