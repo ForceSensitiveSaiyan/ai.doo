@@ -60,6 +60,7 @@ nav:
       - Backup & Restore: admin/backup-restore.md
       - Monitoring: admin/monitoring.md
   - Troubleshooting: troubleshooting.md
+  - EULA: eula.md
 
 extra:
   social:
