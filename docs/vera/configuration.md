@@ -57,6 +57,7 @@ VERA is configured through environment variables, typically set in a `.env` file
 | Variable | Default | Description |
 |---|---|---|
 | `SECURE_COOKIES` | `true` | Set session cookies with `Secure` flag. Disable (`false`) for local HTTP-only development |
+| `LOG_LEVEL` | `INFO` | Logging level (`DEBUG`, `INFO`, `WARNING`, `ERROR`). Use `DEBUG` only for development |
 
 ### Networking & CORS
 
