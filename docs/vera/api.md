@@ -1,6 +1,6 @@
 # API Reference
 
-VERA exposes a REST API on port `4000` (default). All document endpoints require authentication when Hub is configured.
+VERA exposes a REST API on port `4000` (default). All document endpoints require authentication via Hub.
 
 ## Authentication
 
@@ -32,7 +32,7 @@ Sets a `vera_session` HTTP-only cookie (24-hour expiry).
 | Status | Detail |
 |---|---|
 | `401` | Invalid credentials |
-| `503` | Authentication not configured (Hub not connected) |
+| `503` | Hub is unreachable -- check `HUB_BASE_URL` and `HUB_AUTH_API_KEY` configuration |
 
 ---
 
@@ -73,12 +73,12 @@ curl http://localhost:4000/api/auth/status \
 }
 ```
 
-**Response** `200 OK` (Hub not configured):
+**Response** `200 OK` (not authenticated):
 
 ```json
 {
-  "authenticated": true,
-  "auth_required": false
+  "authenticated": false,
+  "auth_required": true
 }
 ```
 

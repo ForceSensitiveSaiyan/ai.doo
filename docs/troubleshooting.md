@@ -41,12 +41,14 @@
 
 ### Authentication not working
 
-**Symptom:** Login fails or "Authentication not configured" error.
+**Symptom:** Login fails or PIKA/VERA returns 503.
 
-- Verify Hub is running: `curl http://localhost:2000/health`
-- Check `HUB_BASE_URL` and `HUB_AUTH_API_KEY` are set in the app's environment.
-- Ensure the API key matches between Hub and the app.
-- Check Hub logs for auth errors: `docker compose logs hub`
+Hub is required for authentication. Check:
+
+- Hub is running: `curl http://localhost:2000/health`
+- `HUB_BASE_URL` and `HUB_AUTH_API_KEY` are set in the app's `.env` file.
+- The API key matches between Hub's `.env` and the app's `.env`.
+- Hub logs for errors: `docker compose logs hub`
 
 ### Account locked out
 

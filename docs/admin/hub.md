@@ -11,6 +11,9 @@ Hub is the central management service for the ai.doo suite. It runs alongside Ol
 | License management | Activate and monitor your ai.doo license key |
 | Audit logging | Immutable log of admin actions — logins, user changes, model operations, license activation |
 
+!!! important "Hub is required"
+    Hub is the mandatory authentication provider for PIKA and VERA. Both applications require a running Hub instance with `HUB_BASE_URL` and `HUB_AUTH_API_KEY` configured. There is no standalone or local authentication mode.
+
 ## Accessing Hub
 
 Hub listens on port **2000** by default:

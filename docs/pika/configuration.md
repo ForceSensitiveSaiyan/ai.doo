@@ -43,21 +43,18 @@ PIKA is configured via environment variables, loaded through [pydantic-settings]
 
 | Variable | Default | Description |
 |---|---|---|
-| `PIKA_ADMIN_PASSWORD` | _(none)_ | Password for admin page. If unset, admin is open |
-| `PIKA_API_KEY` | _(none)_ | API key for programmatic access. If unset, API is open |
+| `PIKA_API_KEY` | _(none)_ | API key for programmatic access |
 | `PIKA_SESSION_SECRET` | _(auto-generated)_ | Secret for signing session cookies. Set a stable value in production |
 
-!!! warning "Production security"
-    Always set `PIKA_ADMIN_PASSWORD`, `PIKA_API_KEY`, and `PIKA_SESSION_SECRET` in production. Leaving them unset makes the admin panel and API accessible without authentication.
-
-### Hub Integration
+### Hub Authentication (Required)
 
 | Variable | Default | Description |
 |---|---|---|
-| `HUB_BASE_URL` | _(empty)_ | Hub service URL (e.g., `http://hub:8000`). Set both Hub variables to enable centralised auth |
-| `HUB_AUTH_API_KEY` | _(empty)_ | API key for Hub authentication. Supports Docker secrets |
+| `HUB_BASE_URL` | _(empty)_ | **Required.** Hub service URL (e.g., `http://hub:8000`) |
+| `HUB_AUTH_API_KEY` | _(empty)_ | **Required.** API key for Hub authentication. Must match Hub's key. Supports Docker secrets |
 
-When both `HUB_BASE_URL` and `HUB_AUTH_API_KEY` are set, PIKA delegates user authentication and license validation to Hub. Without Hub, PIKA falls back to local authentication using `PIKA_ADMIN_PASSWORD`. Hub integration is **required** for multi-user environments and license enforcement.
+!!! warning "Hub is mandatory"
+    Hub is required for all production deployments. Set `HUB_BASE_URL`, `HUB_AUTH_API_KEY`, `PIKA_API_KEY`, and `PIKA_SESSION_SECRET`. PIKA will reject all logins if Hub is not configured or unreachable. There is no local authentication fallback.
 
 ### Query Queue
 
@@ -162,14 +159,13 @@ Minimal production `.env`:
 OLLAMA_BASE_URL=http://ollama:11434
 OLLAMA_MODEL=llama3.1:8b
 
-# Authentication (required for production)
-PIKA_ADMIN_PASSWORD=your-secure-password
-PIKA_API_KEY=your-api-key
-PIKA_SESSION_SECRET=change-me-to-random-string
-
-# Hub integration
+# Hub authentication (required)
 HUB_BASE_URL=http://hub:8000
 HUB_AUTH_API_KEY=your-hub-api-key
+
+# API and session security (required)
+PIKA_API_KEY=your-api-key
+PIKA_SESSION_SECRET=change-me-to-random-string
 
 # RAG tuning
 CHUNK_SIZE=500

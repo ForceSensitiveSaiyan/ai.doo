@@ -89,7 +89,7 @@ uploaded → processing → ocr_done → review_in_progress → validated → su
 
 ## Authentication
 
-VERA delegates authentication to **Hub** (the central ai.doo user management service). When Hub is configured (`HUB_BASE_URL` and `HUB_AUTH_API_KEY`), all document endpoints require a valid session. When Hub is not configured, VERA runs in open mode with no authentication.
+VERA requires **Hub** (the central ai.doo user management service) for authentication. Both `HUB_BASE_URL` and `HUB_AUTH_API_KEY` must be configured. All document endpoints require a valid session. There is no unauthenticated mode.
 
 ## Data Model
 

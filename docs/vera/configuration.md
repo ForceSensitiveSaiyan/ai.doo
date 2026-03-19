@@ -49,8 +49,8 @@ VERA is configured through environment variables, typically set in a `.env` file
 | `HUB_BASE_URL` | `http://hub:8000` | Base URL of the Hub authentication service |
 | `HUB_AUTH_API_KEY` | _(empty)_ | API key for Hub service-to-service auth |
 
-!!! warning "Authentication behavior"
-    When `HUB_BASE_URL` is not set or Hub is unreachable, VERA runs in **open mode** with no authentication. Set both `HUB_BASE_URL` and `HUB_AUTH_API_KEY` for production deployments.
+!!! warning "Authentication required"
+    Hub is required for all deployments. Both `HUB_BASE_URL` and `HUB_AUTH_API_KEY` must be set. VERA will reject requests if Hub is not configured or unreachable. There is no unauthenticated mode.
 
 ### Security
 
@@ -129,9 +129,9 @@ CELERY_RESULT_BACKEND=redis://:vera_redis@redis:6379/0
 OLLAMA_URL=http://ollama:11434
 OLLAMA_MODEL=llama3.1
 
-# Hub auth (optional for local dev)
-# HUB_BASE_URL=http://hub:8000
-# HUB_AUTH_API_KEY=your-key-here
+# Hub auth (required)
+HUB_BASE_URL=http://hub:8000
+HUB_AUTH_API_KEY=your-key-here
 
 # CORS
 CORS_ORIGINS=http://localhost:3000
