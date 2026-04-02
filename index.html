@@ -22,419 +22,12 @@
   <meta name="twitter:description" content="Self-hosted AI tools, extended into bespoke private solutions.">
   <meta name="twitter:image" content="https://aidoo.biz/og-image.png">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="any">
   <meta name="theme-color" content="#0b1020">
 
+  <link rel="stylesheet" href="style.css">
   <style>
-    :root{
-      --bg0:#0b1020;
-      --bg1:#111a33;
-      --ink:#eaf0ff;
-      --muted:rgba(234,240,255,0.72);
-      --accent:#2a8bc9;
-      --accent2:#4db8ff;
-      --card:rgba(255,255,255,0.06);
-      --card2:rgba(255,255,255,0.09);
-      --stroke:rgba(255,255,255,0.12);
-
-      --radius:16px;
-      --max:1080px;
-      --shadow:0 16px 48px rgba(0,0,0,.30);
-      --shadow2:0 8px 24px rgba(0,0,0,.20);
-    }
-
-    /* Skip link */
-    .skip-link{
-      position:absolute;top:-100%;left:16px;
-      padding:10px 18px;border-radius:10px;
-      background:var(--accent);color:#fff;
-      font-weight:600;font-size:14px;
-      z-index:100;
-      transition:top .15s ease;
-    }
-    .skip-link:focus{top:16px}
-
-    /* Focus */
-    .btn:focus-visible{
-      outline:2px solid var(--accent2);
-      outline-offset:2px;
-    }
-    nav a:focus-visible{color:var(--ink)}
-    nav a:focus-visible::after{transform:scaleX(1)}
-
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--ink);
-      background:
-        radial-gradient(800px 600px at 20% 8%, rgba(77,184,255,.10), transparent 65%),
-        radial-gradient(700px 500px at 80% 25%, rgba(42,139,201,.07), transparent 60%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
-      line-height:1.6;
-      min-height:100vh;
-    }
-    a{color:inherit;text-decoration:none}
-    .wrap{max-width:var(--max);margin:0 auto;padding:24px}
-
-    /* Header */
-    header{
-      position:sticky;top:0;z-index:50;
-      background:rgba(11,16,32,.88);
-      backdrop-filter:blur(12px);
-      border-bottom:1px solid var(--stroke);
-    }
-    .nav{
-      max-width:var(--max);
-      margin:0 auto;
-      padding:16px 24px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      font-weight:700;
-      letter-spacing:.2px;
-    }
-    .logoMark{
-      width:40px;height:40px;border-radius:12px;
-      display:grid;place-items:center;
-      background:var(--card2);
-      border:1px solid var(--stroke);
-      overflow:hidden;
-    }
-    .logoMark img{
-      width:34px;height:34px;display:block;
-      filter:drop-shadow(0 1px 3px rgba(0,0,0,.45));
-    }
-
-    /* Wordmark */
-    .wordmark{
-      display:inline-flex;
-      align-items:baseline;
-      font-weight:700;
-      letter-spacing:-0.5px;
-      font-size:18px;
-      line-height:1;
-    }
-    .wm-ai,.wm-doo{color:var(--ink)}
-    .wm-dot{
-      width:7px;height:7px;border-radius:999px;
-      margin:0 5px 3px 5px;
-      background:var(--accent2);
-      display:inline-block;
-    }
-
-    nav{
-      display:flex;gap:20px;align-items:center;
-      color:var(--muted);
-      font-weight:400;
-      font-size:14px;
-    }
-    nav a{
-      position:relative;
-      padding:8px 2px;
-      color:var(--muted);
-      transition:color .15s ease;
-    }
-    nav a:hover{color:var(--ink)}
-    nav a::after{
-      content:"";
-      position:absolute;
-      left:0;right:0;bottom:3px;
-      height:1.5px;
-      background:var(--accent2);
-      transform:scaleX(0);
-      transform-origin:left;
-      transition:transform .15s ease;
-      border-radius:999px;
-      opacity:.9;
-    }
-    nav a:hover::after{transform:scaleX(1)}
-
-    .navRight{display:flex;align-items:center;gap:10px}
-    .menuBtn{
-      display:none;
-      padding:10px 12px;border-radius:10px;
-      border:1px solid var(--stroke);
-      background:var(--card2);
-      font-weight:600;
-      color:var(--ink);
-    }
-    .mobileNav{
-      overflow:hidden;
-      max-height:0;
-      border-top:1px solid var(--stroke);
-      max-width:var(--max);
-      margin:0 auto;
-      transition:max-height .25s ease-out;
-    }
-    .mobileNav.open{max-height:320px}
-    .mobileNav a{
-      display:block;
-      padding:12px 24px;
-      color:var(--muted);
-      font-weight:400;
-      border-bottom:1px solid var(--stroke);
-    }
-    .mobileNav a:last-child{border-bottom:none}
-
-    /* Buttons */
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:10px;
-      padding:11px 18px;
-      border-radius:10px;
-      border:1px solid var(--stroke);
-      background:var(--card);
-      color:var(--ink);
-      font-weight:600;
-      font-size:14px;
-      cursor:pointer;
-      transition:transform .16s ease-out, box-shadow .16s ease-out, border-color .16s ease-out;
-      white-space:nowrap;
-    }
-    .btn:hover{
-      transform:translateY(-1px);
-      border-color:rgba(42,139,201,.30);
-      box-shadow:0 6px 20px rgba(0,0,0,.25);
-    }
-    .btn.primary{
-      border-color:transparent;
-      color:#fff;
-      background:var(--accent);
-      box-shadow:0 8px 24px rgba(42,139,201,.25);
-    }
-    .btn.primary:hover{box-shadow:0 12px 32px rgba(42,139,201,.35)}
-    .btn.subtle{
-      background:transparent;
-      border-color:var(--stroke);
-      color:var(--muted);
-    }
-    .btn.subtle:hover{border-color:rgba(42,139,201,.25);color:var(--ink)}
-
-    /* Hero */
-    .hero{
-      padding:100px 0 48px;
-      display:grid;
-      position:relative;
-    }
-    .pill{
-      width:fit-content;
-      display:inline-flex;align-items:center;gap:10px;
-      padding:7px 14px;border-radius:999px;
-      border:1px solid rgba(77,184,255,.18);
-      background:rgba(77,184,255,.06);
-      color:var(--muted);
-      font-size:13px;font-weight:600;
-      position:relative;
-      margin:0 0 12px;
-    }
-    h1{
-      margin:0 0 24px;
-      font-size:clamp(34px,3.8vw,56px);
-      line-height:1.06;
-      letter-spacing:-1px;
-      max-width:18ch;
-      position:relative;
-      font-weight:700;
-      color:#fff;
-    }
-    .h2{
-      margin:0 0 16px;
-      font-size:28px;
-      letter-spacing:-.6px;
-      line-height:1.2;
-      font-weight:700;
-      color:#fff;
-    }
-    .sub{
-      margin:0;
-      color:var(--muted);
-      font-size:clamp(16px,1.3vw,17px);
-      max-width:56ch;
-      position:relative;
-      line-height:1.65;
-    }
-    .ctaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;position:relative}
-
-    /* Sections */
-    .section{padding:80px 0 80px}
-    .kicker{
-      margin:0 0 8px;
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:.3px;
-      text-transform:uppercase;
-      font-weight:600;
-    }
-    .lead{
-      margin:0;
-      color:var(--muted);
-      max-width:60ch;
-      font-size:15px;
-      line-height:1.65;
-    }
-
-    /* Grid/cards */
-    .grid{
-      display:grid;
-      gap:20px;
-      grid-template-columns:repeat(12,1fr);
-      margin-top:24px;
-    }
-    .card{
-      border:1px solid var(--stroke);
-      background:var(--card);
-      border-radius:14px;
-      padding:24px;
-      box-shadow:0 2px 8px rgba(0,0,0,.18);
-      transition:transform .18s ease-out, border-color .18s ease-out, box-shadow .18s ease-out, background .18s ease-out;
-    }
-    .card:hover,
-    .card:focus-visible{
-      transform:translateY(-3px);
-      border-color:rgba(42,139,201,.35);
-      box-shadow:0 12px 32px rgba(0,0,0,.30), 0 0 0 1px rgba(42,139,201,.10);
-      background:var(--card2);
-    }
-    .card h3{margin:0 0 10px;font-size:15px;letter-spacing:-.15px;font-weight:700;color:#fff}
-    .card p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
-
-    .span4{grid-column:span 4}
-    .span6{grid-column:span 6}
-    .span12{grid-column:span 12}
-    .card.span12{padding:32px}
-
-    /* Chips */
-    .chips{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
-    .chip{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:6px 10px;border-radius:999px;
-      border:1px solid var(--stroke);
-      background:var(--card);
-      color:var(--muted);
-      font-size:12px;
-      font-weight:600;
-    }
-    .dot{
-      width:7px;height:7px;border-radius:999px;
-      background:var(--accent2);
-    }
-
-    /* Principle / proof band */
-    .proof{
-      margin-top:24px;
-      border:1px solid var(--stroke);
-      border-radius:var(--radius);
-      background:var(--card);
-      padding:24px;
-      display:flex;
-      gap:16px;
-      align-items:flex-start;
-      flex-wrap:wrap;
-    }
-    .proof .title{
-      font-weight:700;
-      color:#fff;
-      margin:0;
-      font-size:14px;
-      letter-spacing:-.15px;
-      min-width:200px;
-    }
-    .proof p{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-      max-width:80ch;
-      line-height:1.6;
-    }
-
-    /* CTA band */
-    .ctaBand{
-      margin:64px 0 40px;
-      padding:28px;
-      border-radius:var(--radius);
-      border:1px solid var(--stroke);
-      background:var(--card2);
-      box-shadow:var(--shadow);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:20px;
-      flex-wrap:wrap;
-    }
-    .ctaBand .title{font-weight:700;font-size:17px;margin:0 0 4px;color:#fff}
-    .ctaBand .small{margin:0;color:var(--muted);font-size:13px}
-
-    footer{
-      border-top:1px solid var(--stroke);
-      padding:32px 0 48px;
-      color:var(--muted);
-      margin-top:48px;
-    }
-    .footerRow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-    .footerCol a{color:var(--muted);font-weight:400;display:inline-block;padding:3px 0}
-    .footerCol a:hover{color:var(--ink)}
-    .trustline{
-      margin:10px 0 0;
-      font-size:13px;
-      color:var(--muted);
-    }
-
-    @media (max-width: 920px){
-      .wrap{padding:20px}
-      nav{display:none}
-      .menuBtn{display:inline-flex}
-      .span4,.span6{grid-column:span 12}
-      .ctaBand{flex-direction:column;align-items:flex-start}
-    }
-
-    @media (prefers-reduced-motion:no-preference){
-      @keyframes fadeUp{
-        from{opacity:0;transform:translateY(12px)}
-        to{opacity:1;transform:translateY(0)}
-      }
-      .hero > *{
-        animation:fadeUp .45s ease both;
-      }
-      .hero > :nth-child(1){animation-delay:0s}
-      .hero > :nth-child(2){animation-delay:.08s}
-      .hero > :nth-child(3){animation-delay:.16s}
-      .hero > :nth-child(4){animation-delay:.24s}
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      *,*::before,*::after{
-        transition-duration:0.01ms !important;
-        animation-duration:0.01ms !important;
-      }
-    }
-
-    /* Journey steps */
-    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:40px}
-    .step{padding:0 28px 0 0;position:relative}
-    .step:not(:last-child)::after{content:"";position:absolute;top:22px;right:14px;width:1px;height:40px;background:var(--stroke)}
-    .step-num{font-size:13px;font-weight:700;color:var(--accent2);letter-spacing:.5px;margin-bottom:12px;text-transform:uppercase}
-    .step h3{font-size:15px;font-weight:700;color:#fff;margin:0 0 8px}
-    .step p{font-size:14px;color:var(--muted);margin:0;line-height:1.6}
-
-    /* Pricing */
-    .pricingCard{background:var(--card2);border-color:rgba(42,139,201,.30)}
-    .pricingTier{display:flex;flex-direction:column}
-    .pricingBtnWrap{margin-top:auto;padding-top:20px}
-    .featureList{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:8px}
-    .featureList li{font-size:13px;color:var(--muted);padding-left:16px;position:relative;line-height:1.5}
-    .featureList li::before{content:"";position:absolute;left:0;top:6px;width:5px;height:5px;border-radius:999px;background:var(--accent2);opacity:.7}
-
-    /* Chat widget */
+    /* Chat widget (homepage only) */
     .chatFab{
       position:fixed;bottom:24px;right:24px;z-index:200;
       display:inline-flex;align-items:center;gap:8px;
@@ -534,9 +127,6 @@
     .chatSend:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
 
     @media (max-width:920px){
-      .steps{grid-template-columns:1fr;gap:24px}
-      .step:not(:last-child)::after{display:none}
-      .step{padding:0;border-left:2px solid var(--stroke);padding-left:20px}
       .chatPanel{bottom:72px}
     }
   </style>
@@ -575,6 +165,7 @@
 
     <nav aria-label="Primary navigation">
       <a href="#what">What we do</a>
+      <a href="#why">Why self-hosted</a>
       <a href="#how">How we work</a>
       <a href="#pricing">Pricing</a>
       <a href="#products">Products</a>
@@ -590,6 +181,7 @@
 
   <div class="mobileNav" id="mobileNav">
     <a href="#what">What we do</a>
+    <a href="#why">Why self-hosted</a>
     <a href="#how">How we work</a>
     <a href="#pricing">Pricing</a>
     <a href="#products">Products</a>
@@ -659,6 +251,73 @@
     </div>
   </section>
 
+  <!-- WHY SELF-HOSTED -->
+  <section class="section" id="why">
+    <p class="kicker">Why self-hosted</p>
+    <h2 class="h2">Your data stays where it belongs.</h2>
+    <p class="lead">
+      Self-hosted AI isn't just a deployment detail — it's a fundamentally different relationship between your organisation and its data.
+    </p>
+    <div class="grid">
+
+      <div class="card span4">
+        <h3>Data never leaves</h3>
+        <p>No API calls to external AI providers. Documents, queries, and results stay within your network perimeter. Auditable by design.</p>
+        <div class="chips">
+          <span class="chip"><span class="dot"></span>Private by default</span>
+          <span class="chip"><span class="dot"></span>No egress</span>
+        </div>
+      </div>
+
+      <div class="card span4">
+        <h3>Runs on your hardware</h3>
+        <p>A VPS, workstation, or dedicated GPU server. No cloud instances, no external runtime dependencies. You own the infrastructure.</p>
+        <div class="chips">
+          <span class="chip"><span class="dot"></span>VPS</span>
+          <span class="chip"><span class="dot"></span>On-premise</span>
+          <span class="chip"><span class="dot"></span>GPU optional</span>
+        </div>
+      </div>
+
+      <div class="card span4">
+        <h3>Air-gap capable</h3>
+        <p>Works fully offline after initial setup. No internet dependency for inference — critical for classified, industrial, or disconnected environments.</p>
+        <div class="chips">
+          <span class="chip"><span class="dot"></span>Offline</span>
+          <span class="chip"><span class="dot"></span>No cloud dependency</span>
+        </div>
+      </div>
+
+      <div class="card span4">
+        <h3>Predictable cost</h3>
+        <p>No per-query, per-token, or seat-tier pricing surprises. One deployment, fixed infrastructure cost, unlimited internal usage.</p>
+        <div class="chips">
+          <span class="chip"><span class="dot"></span>Fixed cost</span>
+          <span class="chip"><span class="dot"></span>Unlimited use</span>
+        </div>
+      </div>
+
+      <div class="card span4">
+        <h3>Compliance-ready</h3>
+        <p>No third-party data processor under GDPR Article 28 — because there is none. Simplifies DPIAs, ISO 27001 scoping, and regulatory sign-off.</p>
+        <div class="chips">
+          <span class="chip"><span class="dot"></span>GDPR</span>
+          <span class="chip"><span class="dot"></span>ISO 27001</span>
+        </div>
+      </div>
+
+      <div class="card span4">
+        <h3>Full auditability</h3>
+        <p>Every query, model version, and access event logged locally. You own the audit trail — no vendor dashboard required.</p>
+        <div class="chips">
+          <span class="chip"><span class="dot"></span>Audit log</span>
+          <span class="chip"><span class="dot"></span>Local storage</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
   <!-- HOW -->
   <section class="section" id="how">
     <p class="kicker">How we work</p>
@@ -717,7 +376,7 @@
       <div class="card span4 pricingCard pricingTier">
         <div class="step-num">Pilot</div>
         <h3>Fixed-scope pilot</h3>
-        <p>A working system in your environment. Measurable outcome, pricing on request.</p>
+        <p>A working system in your environment. Measurable outcome. Pilots from <strong>£3,000</strong> — exact scope agreed upfront.</p>
         <ul class="featureList">
           <li>Deployed in your infrastructure</li>
           <li>Real data, real behaviour</li>
@@ -928,6 +587,12 @@
       if (e.key === "Escape" && panel.classList.contains("open")) closeChat();
     });
 
+    // Conversation history for multi-turn chat
+    let chatHistory = JSON.parse(sessionStorage.getItem("aidoo_chat") || "[]");
+
+    // Restore previous messages on load
+    chatHistory.forEach(function(m) { appendMsg(m.role, m.content); });
+
     function appendMsg(role, text) {
       const div = document.createElement("div");
       div.className = "chatMsg " + role;
@@ -949,11 +614,18 @@
         const res = await fetch("https://aidoo.biz/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text })
+          body: JSON.stringify({ message: text, history: chatHistory })
         });
         const data = await res.json();
+        const reply = data.reply || "Sorry, I couldn't get a response.";
         typing.className = "chatMsg assistant";
-        typing.textContent = data.reply || "Sorry, I couldn't get a response.";
+        typing.textContent = reply;
+        // Save to conversation history
+        chatHistory.push({ role: "user", content: text });
+        chatHistory.push({ role: "assistant", content: reply });
+        // Keep last 10 turns (20 messages)
+        if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+        sessionStorage.setItem("aidoo_chat", JSON.stringify(chatHistory));
       } catch {
         typing.className = "chatMsg assistant";
         typing.textContent = "Sorry, something went wrong. Try emailing hello@aidoo.biz.";

@@ -9,9 +9,6 @@
   <meta name="robots" content="noindex">
   <meta name="author" content="ai.doo">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" sizes="any">
   <meta name="theme-color" content="#0b1020">
 
@@ -145,15 +142,11 @@
 
   <hr class="divider">
 
-  <h2>3. Google Fonts</h2>
+  <h2>3. Fonts</h2>
   <p>
-    This website loads fonts from Google Fonts (<code>fonts.googleapis.com</code>). When your
-    browser requests a font file, Google receives your IP address and browser user agent as
-    part of that request. This is the only meaningful third-party data touch point on this site.
-  </p>
-  <p>
-    For details on how Google handles this data, see
-    <a href="https://developers.google.com/fonts/faq/privacy" target="_blank" rel="noopener">Google Fonts privacy FAQ</a>.
+    This website self-hosts its font files (Inter). No requests are made to Google Fonts or any
+    other external font provider. There are no third-party data touch points on this site beyond
+    the chat widget described below.
   </p>
 
   <hr class="divider">
@@ -181,7 +174,7 @@
   <ul>
     <li>Your message text is sent to OpenAI's servers for processing</li>
     <li>Your IP address is logged by our server for rate limiting</li>
-    <li>No conversation history is stored — each message is processed independently</li>
+    <li>Your conversation history within the current browser session is sent alongside each new message to provide context — it is not stored on our servers and is cleared when you close the tab</li>
   </ul>
   <p>
     OpenAI's data handling is governed by their
