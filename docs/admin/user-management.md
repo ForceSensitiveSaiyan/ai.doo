@@ -58,6 +58,38 @@ Hub enforces rate limiting on failed login attempts to prevent brute-force attac
 !!! note
     The lockout counter resets after a successful login. An admin can manually unlock an account via the API: `POST /api/users/{id}/unlock`.
 
+## Changing a User's Role
+
+Admins can change any user's role between `user` and `admin` directly from the Users tab — no page reload required.
+
+1. Log in to Hub as an admin.
+2. Navigate to the **Users** tab.
+3. In the **Role** column, select the new role from the dropdown.
+
+The change takes effect immediately. An audit log entry is created.
+
+!!! warning "Demoting the last admin"
+    Hub prevents you from removing admin status from the only remaining admin account.
+
+## Changing Your Password
+
+Any authenticated user can change their own password without admin involvement.
+
+1. Log in to Hub.
+2. Click the **lock icon** (🔒) in the top-right header.
+3. Enter your current password and choose a new one (minimum 8 characters, mixed case + digit).
+4. Click **Change password**.
+
+!!! note "Admin password reset"
+    Admins can reset any user's password via `PUT /api/users/{id}/password`. This does not require knowledge of the current password.
+
+    ```bash
+    curl -X PUT http://localhost:2000/api/users/{id}/password \
+      -H "Content-Type: application/json" \
+      -d '{"password": "NewSecure1!"}' \
+      -b "hub_session=YOUR_SESSION_COOKIE"
+    ```
+
 ## Enabling / Disabling Users
 
 To temporarily revoke access without deleting the account:

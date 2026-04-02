@@ -149,26 +149,30 @@ The response includes:
 
 ## Exporting
 
-Export validated documents in three formats:
+Export validated documents in five formats:
 
-| Format | Content-Type | Description |
-|---|---|---|
-| `json` | `application/json` | Full payload with document ID, validated text, and structured fields |
-| `csv` | `text/csv` | Key-value rows: document_id, validated_text, plus each structured field |
-| `txt` | `text/plain` | Raw validated text only |
+| Format | `?format=` | Content-Type | Description |
+|---|---|---|---|
+| JSON | `json` (default) | `application/json` | Full payload: document ID, validated text, structured fields |
+| Plain text | `txt` | `text/plain` | Raw validated text only |
+| CSV | `csv` | `text/csv` | Token-level data table |
+| Factur-X | `facturx` | `application/xml` | Factur-X MINIMUM XML (EN 16931 / CII syntax) |
+| UBL | `ubl` | `application/xml` | UBL 2.1 Invoice XML (ISO/IEC 19845, PEPPOL-compatible) |
 
 ```bash
 # JSON (default)
 curl "http://localhost:4000/documents/{id}/export" \
   -b "vera_session=YOUR_SESSION_COOKIE"
 
-# CSV
-curl "http://localhost:4000/documents/{id}/export?format=csv" \
-  -b "vera_session=YOUR_SESSION_COOKIE"
+# Factur-X XML (structured invoice)
+curl "http://localhost:4000/documents/{id}/export?format=facturx" \
+  -b "vera_session=YOUR_SESSION_COOKIE" \
+  -o invoice.xml
 
-# Plain text
-curl "http://localhost:4000/documents/{id}/export?format=txt" \
-  -b "vera_session=YOUR_SESSION_COOKIE"
+# UBL 2.1 XML
+curl "http://localhost:4000/documents/{id}/export?format=ubl" \
+  -b "vera_session=YOUR_SESSION_COOKIE" \
+  -o invoice-ubl.xml
 ```
 
 Page-level export is also available for multi-page documents:
@@ -177,6 +181,17 @@ Page-level export is also available for multi-page documents:
 curl "http://localhost:4000/documents/{doc_id}/pages/{page_id}/export?format=json" \
   -b "vera_session=YOUR_SESSION_COOKIE"
 ```
+
+### Invoice Export and Missing Fields
+
+When exporting as `facturx` or `ubl`, VERA maps extracted structured fields to EN 16931 business terms (BT-1 through BT-112). If mandatory fields are missing from the validated document, VERA still produces valid XML but includes a warning header:
+
+```
+X-VERA-Warnings: BT-1 (invoice_number) missing; BT-27 (seller_name) missing
+```
+
+!!! tip "Improving extraction quality"
+    To reduce missing-field warnings, ensure the document is clearly legible and that the **structured fields** are reviewed and corrected before export. You can manually fill in any field during the review step.
 
 !!! info "Export marks the document"
     Exporting transitions the document status to `exported`. This is recorded in the audit log.

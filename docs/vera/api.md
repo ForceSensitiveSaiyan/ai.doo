@@ -571,13 +571,45 @@ Returns `text/plain` in Prometheus exposition format.
 
 List available models from the connected Ollama instance.
 
+```bash
+curl http://localhost:4000/llm/models \
+  -b "vera_session=YOUR_SESSION_COOKIE"
+```
+
+**Response** `200 OK`:
+
+```json
+{"models": ["llama3.1", "qwen2.5-coder:14b"]}
+```
+
+---
+
 ### GET /llm/health
 
-Check Ollama connectivity and list available models.
+Check Ollama connectivity.
+
+```bash
+curl http://localhost:4000/llm/health \
+  -b "vera_session=YOUR_SESSION_COOKIE"
+```
+
+**Response** `200 OK` (reachable):
+
+```json
+{"status": "ok", "models": ["llama3.1"]}
+```
+
+**Response** `503 Service Unavailable` (unreachable):
+
+```json
+{"status": "unavailable"}
+```
+
+---
 
 ### POST /llm/models/pull
 
-Pull a model from the Ollama registry.
+Pull a model from the Ollama registry (synchronous — waits for completion).
 
 ```bash
 curl -X POST http://localhost:4000/llm/models/pull \
@@ -586,6 +618,60 @@ curl -X POST http://localhost:4000/llm/models/pull \
   -b "vera_session=YOUR_SESSION_COOKIE"
 ```
 
+**Response** `200 OK`:
+
+```json
+{"status": "pulled", "model": "llama3.2:3b"}
+```
+
+---
+
 ### POST /llm/models/pull/stream
 
-Pull a model with streaming progress (NDJSON).
+Pull a model with streaming progress (NDJSON, one JSON object per line).
+
+```bash
+curl -X POST http://localhost:4000/llm/models/pull/stream \
+  -H "Content-Type: application/json" \
+  -d '{"model": "llama3.2:3b"}' \
+  -b "vera_session=YOUR_SESSION_COOKIE"
+```
+
+Each line is a progress update:
+
+```json
+{"status": "pulling manifest"}
+{"status": "downloading", "completed": 512000, "total": 2048000}
+{"status": "success"}
+```
+
+---
+
+## License
+
+### GET /api/license/status
+
+Returns the current license enforcement level from Hub. The frontend uses this to show warnings and block actions when the license is expired.
+
+```bash
+curl http://localhost:4000/api/license/status \
+  -b "vera_session=YOUR_SESSION_COOKIE"
+```
+
+**Response** `200 OK`:
+
+```json
+{
+  "enforcement_level": "licensed",
+  "days_until_expiry": 180,
+  "grace_days_remaining": null
+}
+```
+
+| `enforcement_level` | Meaning |
+|---|---|
+| `grace` | No key, 14-day evaluation period |
+| `licensed` | Valid key, more than 30 days to expiry |
+| `warning` | Valid key, expiry within 30 days |
+| `soft` | Expired — uploads and validation blocked |
+| `hard` | Expired ≥30 days — all endpoints blocked |
