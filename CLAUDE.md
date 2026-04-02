@@ -19,7 +19,7 @@ There is also a small Python/Flask backend (`api/`) that powers the chat widget.
 
 ## Design system
 
-All CSS is inline in each page's `<style>` block — no shared stylesheet.
+Shared styles live in `style.css` (loaded by all pages). Individual pages may add inline `<style>` blocks for page-specific components (e.g. the chat widget on the homepage).
 
 ### CSS variables (defined in `:root`)
 ```css
@@ -37,7 +37,7 @@ All CSS is inline in each page's `<style>` block — no shared stylesheet.
 ```
 
 ### Typography
-- Font: **Inter** loaded from Google Fonts (`wght@400;600;700`)
+- Font: **Inter** — self-hosted variable WOFF2 at `/fonts/inter-latin.woff2` (declared in `style.css` via `@font-face`; no Google Fonts CDN dependency)
 - Body line-height: 1.6–1.7
 - Headings: `font-weight:700`, negative `letter-spacing`
 - Muted body text uses `--muted`, white headings use `#fff` or `--ink`
@@ -62,9 +62,21 @@ background:
 - **Pricing cards**: `.pricingTier` (flex-column to pin CTA to bottom), `.pricingCard` (highlighted variant), `.featureList` (bullet list with accent dots)
 - **Chat widget**: `.chatFab` (fixed FAB), `.chatPanel` (fixed panel, toggled with `.open`), `.chatMsg.user` / `.chatMsg.assistant`
 
+## Homepage sections (in order)
+
+| Section id | Content |
+|-----------|---------|
+| `#hero` | Headline, tagline, CTA buttons |
+| `#what` | Three feature cards (document intelligence, automation, self-hosted delivery) |
+| `#why` | Six self-hosting benefit cards (data never leaves, hardware, air-gap, cost, compliance, auditability) |
+| `#how` | Four-step engagement process |
+| `#pricing` | Three tiers: Discovery (free), Pilot (from £3,000), Production (custom) |
+| `#products` | PIKA, VERA, Hub product cards |
+| `#contact` | CTA band + footer |
+
 ## Conventions
 - Dark theme only — no light mode
-- No external CSS frameworks
+- No external CSS frameworks; no Google Fonts CDN (fonts self-hosted in `/fonts/`)
 - Favicon: `favicon.svg` (SVG, referenced as `../favicon.svg` from subdirectories)
 - Copyright year injected via `document.getElementById("year").textContent = new Date().getFullYear()`
 - Legal/privacy pages use `<meta name="robots" content="noindex">`

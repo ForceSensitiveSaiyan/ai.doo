@@ -60,10 +60,18 @@ How we work — four steps:
 
 Engagement models / pricing:
 - Discovery: Free initial call, no obligation — 30-60 minutes to understand your environment and goals
-- Pilot: Fixed scope, measurable outcome, pricing on request — email hello@aidoo.biz
+- Pilot: Fixed scope, measurable outcome. Pilots start from £3,000 — exact scope agreed upfront. Email hello@aidoo.biz to discuss.
 - Production: Full build, documentation, and ongoing support — custom scope agreed after pilot
 
-Keep answers concise and helpful. If asked about specific pricing figures, explain that pricing is on request and suggest emailing hello@aidoo.biz. Do not speculate about features or capabilities not described above."""
+Why self-hosted AI (key benefits to share with interested prospects):
+- Data never leaves: no API calls to external AI providers; everything stays within the customer's network
+- Runs on their hardware: VPS, workstation, or dedicated GPU server — no cloud instances required
+- Air-gap capable: works fully offline after setup; no internet dependency for inference
+- Predictable cost: no per-query or per-token pricing; fixed infrastructure cost, unlimited internal use
+- Compliance-ready: no third-party data processor under GDPR Article 28; simplifies DPIAs and ISO 27001
+- Full auditability: every query and access event logged locally
+
+Keep answers concise and helpful. For production pricing or complex scoping questions, suggest emailing hello@aidoo.biz. Do not speculate about features or capabilities not described above."""
 
 
 @app.after_request
@@ -81,6 +89,9 @@ def chat_preflight():
     return "", 204
 
 
+MAX_HISTORY_MESSAGES = 10  # Max conversation turns to send to the API
+
+
 @app.route("/api/chat", methods=["POST"])
 def chat():
     if _is_rate_limited(request.remote_addr):
@@ -96,14 +107,28 @@ def chat():
     if len(message) > 1000:
         return jsonify({"error": "Message too long"}), 400
 
+    # Build conversation messages: system + optional history + current message
+    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+
+    history = data.get("history", [])
+    if isinstance(history, list):
+        # Validate and limit history entries
+        for entry in history[-MAX_HISTORY_MESSAGES:]:
+            if (
+                isinstance(entry, dict)
+                and entry.get("role") in ("user", "assistant")
+                and isinstance(entry.get("content"), str)
+                and len(entry["content"]) <= 1000
+            ):
+                messages.append({"role": entry["role"], "content": entry["content"]})
+
+    messages.append({"role": "user", "content": message})
+
     try:
         completion = client.chat.completions.create(
             model="gpt-4o-mini",
             max_tokens=500,
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": message},
-            ],
+            messages=messages,
         )
         reply = completion.choices[0].message.content
         return jsonify({"reply": reply})
