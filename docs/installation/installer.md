@@ -1,34 +1,18 @@
 # Installer Script
 
-The installer script automates the full ai.doo stack setup.
+!!! warning "Coming Soon"
+    The automated installer script is under development and not yet available. In the meantime, follow the [Quick Start](quick-start.md) guide for manual installation.
 
-## Usage
+The installer script will automate the full ai.doo stack setup, including:
 
-```bash
-curl -fsSL https://get.aidoo.biz/install.sh | bash
-```
+- Checking prerequisites (Docker, Docker Compose, curl)
+- GPU detection (NVIDIA via `nvidia-smi`)
+- Interactive product selection (PIKA, VERA, or both)
+- Secret generation and directory setup
+- Docker image pull and service startup
+- Health checks and optional Caddy reverse proxy for TLS
 
-Or download and run manually:
-
-```bash
-wget https://get.aidoo.biz/install.sh
-chmod +x install.sh
-./install.sh
-```
-
-## What It Does
-
-1. **Checks prerequisites** — verifies Docker, Docker Compose, and curl are installed.
-2. **Detects GPU** — checks for NVIDIA GPU via `nvidia-smi`.
-3. **Interactive prompts** — asks which products to install, admin password, and domain names.
-4. **Creates directory structure** — sets up `~/aidoo/` with configs and secrets.
-5. **Generates secrets** — creates random passwords and API keys using `openssl rand`.
-6. **Pulls images** — downloads Docker images from GHCR.
-7. **Starts the stack** — launches services in order: Ollama, Hub, then PIKA/VERA.
-8. **Health checks** — verifies all services are running.
-9. **Optional** — offers to set up Caddy reverse proxy for TLS.
-
-## Options
+## Planned Options
 
 | Flag | Description |
 |------|-------------|
@@ -37,12 +21,6 @@ chmod +x install.sh
 | `--password <pass>` | Set admin password (skip interactive prompt) |
 | `--domain example.com` | Set domain for reverse proxy |
 | `--yes` | Accept all defaults (non-interactive) |
-
-### Non-interactive example
-
-```bash
-./install.sh --products pika,vera --password 'MySecure1' --no-gpu --yes
-```
 
 ## Directory Structure
 

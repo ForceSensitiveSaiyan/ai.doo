@@ -107,8 +107,15 @@ def chat():
     if len(message) > 1000:
         return jsonify({"error": "Message too long"}), 400
 
-    # Build conversation messages: system + optional history + current message
-    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+    # Build conversation messages: system + page context + optional history + current message
+    page = data.get("page", "")
+    page_context = ""
+    if page == "pika":
+        page_context = "\n\nThe user is currently on the PIKA product page. Focus your answers on PIKA features, capabilities, and use cases. If they ask general questions, relate them back to PIKA where relevant."
+    elif page == "vera":
+        page_context = "\n\nThe user is currently on the VERA product page. Focus your answers on VERA features, capabilities, and use cases. If they ask general questions, relate them back to VERA where relevant."
+
+    messages = [{"role": "system", "content": SYSTEM_PROMPT + page_context}]
 
     history = data.get("history", [])
     if isinstance(history, list):

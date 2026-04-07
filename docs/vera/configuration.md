@@ -52,6 +52,26 @@ VERA is configured through environment variables, typically set in a `.env` file
 !!! warning "Authentication required"
     Hub is required for all deployments. Both `HUB_BASE_URL` and `HUB_AUTH_API_KEY` must be set. VERA will reject requests if Hub is not configured or unreachable. There is no unauthenticated mode.
 
+#### Credential Caching (Hub Outage Resilience)
+
+VERA caches validated credentials in Redis using HMAC-keyed hashes (no plaintext passwords are stored). If Hub becomes unreachable during a login attempt, VERA checks the credential cache and allows re-authentication for up to 4 hours after the last successful Hub validation.
+
+This means users who have recently logged in can continue working during a brief Hub outage without being locked out.
+
+| Behaviour | Detail |
+|---|---|
+| Cache location | Redis (same instance as sessions and Celery broker) |
+| TTL | 4 hours from last successful Hub validation |
+| Security | Credentials stored as HMAC-SHA256 hash keyed with `HUB_AUTH_API_KEY` |
+| Logout | Cache entry removed on explicit logout |
+
+#### Session Revocation
+
+VERA periodically checks Hub to verify that session users are still active. If an admin disables or deletes a user in Hub, VERA will reject their requests within 5 minutes (the user-status cache TTL). This check runs automatically — no configuration is required.
+
+!!! note
+    During a Hub outage, the user-status check fails open — existing sessions remain valid. This is a deliberate trade-off to avoid locking out all users during infrastructure issues.
+
 ### Security
 
 | Variable | Default | Description |

@@ -221,6 +221,7 @@
     <h2 class="h2">Licensed per seat. Self-hosted.</h2>
     <p class="lead">
       PIKA is licensed through the ai.doo Hub. No per-query fees, no cloud costs. You own your infrastructure and your data.
+      Not sure where to start? See our <a href="../#pricing">engagement options</a> — including a free discovery call and fixed-scope pilots.
     </p>
 
     <div class="grid">
@@ -381,7 +382,7 @@
       try {
         const res = await fetch("https://aidoo.biz/api/chat", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text, history: chatHistory })
+          body: JSON.stringify({ message: text, history: chatHistory, page: "pika" })
         });
         const data = await res.json();
         const reply = data.reply || "Sorry, I couldn't get a response.";

@@ -101,6 +101,26 @@ curl http://localhost:4000/api/csrf-token \
 
 ---
 
+## CSRF Protection
+
+All state-changing requests (`POST`, `PUT`, `PATCH`, `DELETE`) require a CSRF token. Fetch a token from `GET /api/csrf-token` and include it in the `X-CSRF-Token` header.
+
+```bash
+# 1. Get a CSRF token
+TOKEN=$(curl -s http://localhost:4000/api/csrf-token \
+  -b "vera_session=YOUR_SESSION_COOKIE" | jq -r .csrf_token)
+
+# 2. Use it in a state-changing request
+curl -X POST http://localhost:4000/documents/upload \
+  -H "X-CSRF-Token: $TOKEN" \
+  -F "file=@scan.pdf" \
+  -b "vera_session=YOUR_SESSION_COOKIE"
+```
+
+CSRF tokens are single-use and expire after 1 hour. Requests without a valid token return `403 Forbidden`.
+
+---
+
 ## Documents
 
 ### POST /documents/upload
@@ -324,7 +344,7 @@ Accepts the same body as document-level validation, plus:
 
 ### GET /documents/{document_id}/export
 
-Export a validated document.
+Export a validated document in multiple formats, including EU e-invoicing standards.
 
 ```bash
 # JSON (default)
@@ -335,13 +355,19 @@ curl "http://localhost:4000/documents/{id}/export?format=csv"
 
 # Plain text
 curl "http://localhost:4000/documents/{id}/export?format=txt"
+
+# Factur-X (EN 16931 MINIMUM, CII XML)
+curl "http://localhost:4000/documents/{id}/export?format=facturx"
+
+# UBL 2.1 XML
+curl "http://localhost:4000/documents/{id}/export?format=ubl"
 ```
 
 **Query parameters:**
 
 | Parameter | Default | Options |
 |---|---|---|
-| `format` | `json` | `json`, `csv`, `txt` |
+| `format` | `json` | `json`, `csv`, `txt`, `facturx`, `ubl` |
 
 **Response** `200 OK` (JSON):
 
@@ -353,6 +379,11 @@ curl "http://localhost:4000/documents/{id}/export?format=txt"
 }
 ```
 
+For `facturx` and `ubl` formats, the response is `application/xml`.
+
+!!! note "Validation warnings"
+    If required invoice fields are missing (e.g. `invoice_number`, `total`), the export still succeeds but returns an `X-VERA-Warnings` header listing the missing fields. Populate structured fields before export for compliant invoices.
+
 **Errors:**
 
 | Status | Detail |
@@ -362,6 +393,30 @@ curl "http://localhost:4000/documents/{id}/export?format=txt"
 
 !!! note "Page-level export"
     Use `GET /documents/{doc_id}/pages/{page_id}/export?format=json` to export individual pages.
+
+---
+
+### POST /documents/{document_id}/reopen
+
+Reopen a validated, summarized, or exported document for further review. Resets page review flags and transitions the document back to `review_in_progress`.
+
+```bash
+curl -X POST http://localhost:4000/documents/{id}/reopen \
+  -b "vera_session=YOUR_SESSION_COOKIE"
+```
+
+**Response** `200 OK`:
+
+```json
+{"status": "review_in_progress", "document_id": "a1b2c3d4"}
+```
+
+**Errors:**
+
+| Status | Detail |
+|---|---|
+| `404` | Document not found |
+| `409` | Document is not in a reopenable status |
 
 ---
 
@@ -609,7 +664,7 @@ curl http://localhost:4000/llm/health \
 
 ### POST /llm/models/pull
 
-Pull a model from the Ollama registry (synchronous — waits for completion).
+Pull a model from the Ollama registry (synchronous — waits for completion). **Requires admin role.**
 
 ```bash
 curl -X POST http://localhost:4000/llm/models/pull \
@@ -628,7 +683,7 @@ curl -X POST http://localhost:4000/llm/models/pull \
 
 ### POST /llm/models/pull/stream
 
-Pull a model with streaming progress (NDJSON, one JSON object per line).
+Pull a model with streaming progress (NDJSON, one JSON object per line). **Requires admin role.**
 
 ```bash
 curl -X POST http://localhost:4000/llm/models/pull/stream \

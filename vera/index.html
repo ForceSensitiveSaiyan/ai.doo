@@ -216,6 +216,7 @@
     <h2 class="h2">Licensed per seat. Self-hosted.</h2>
     <p class="lead">
       VERA is licensed through the ai.doo Hub. No per-document fees, no cloud costs. You own your infrastructure.
+      Not sure where to start? See our <a href="../#pricing">engagement options</a> — including a free discovery call and fixed-scope pilots.
     </p>
 
     <div class="grid">
@@ -284,6 +285,7 @@
         <div style="font-weight:700;color:var(--ink);margin-bottom:8px;">Navigate</div>
         <div><a href="../">Home</a></div>
         <div><a href="../pika/">PIKA</a></div>
+        <div><a href="changelog">Changelog</a></div>
         <div><a href="https://docs.aidoo.biz" target="_blank" rel="noopener">Documentation</a></div>
         <div><a href="../privacy/">Privacy policy</a></div>
         <div><a href="https://docs.aidoo.biz/eula/" target="_blank" rel="noopener">EULA</a></div>
@@ -375,7 +377,7 @@
       try {
         const res = await fetch("https://aidoo.biz/api/chat", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text, history: chatHistory })
+          body: JSON.stringify({ message: text, history: chatHistory, page: "vera" })
         });
         const data = await res.json();
         const reply = data.reply || "Sorry, I couldn't get a response.";

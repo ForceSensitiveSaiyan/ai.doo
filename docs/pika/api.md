@@ -2,6 +2,9 @@
 
 All API endpoints are served under the `/api/v1` prefix unless otherwise noted. Authentication is via session cookie (web UI) or `X-API-Key` header (programmatic access).
 
+!!! note "Session architecture"
+    PIKA uses stateless signed cookies (no server-side session store). Sessions expire after the configured `SESSION_MAX_AGE` (default 24 hours). If a user is disabled in Hub, PIKA checks user status periodically (every 5 minutes) and will reject requests from disabled users on the next check cycle. For immediate revocation, restart the PIKA service.
+
 ## Health and Status
 
 ### `GET /api/v1/health`
@@ -15,7 +18,7 @@ Full health check of PIKA and its dependencies.
 ```json
 {
   "status": "healthy",
-  "version": "0.4.0",
+  "version": "1.3.1",
   "ollama": {
     "connected": true,
     "current_model": "llama3.2:3b",

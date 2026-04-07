@@ -81,18 +81,20 @@ Each JWT contains these claims:
 | `iss` | `string` | Issuer — always `aidoo.biz` |
 | `sub` | `string` | Customer identifier |
 
-## Soft Enforcement
+## Graduated Enforcement
 
-ai.doo uses **soft enforcement** — an unlicensed installation remains fully functional:
+ai.doo uses **graduated enforcement** — restrictions increase over time, giving you ample notice to renew. Data is never deleted.
 
-| Condition | Behaviour |
-|---|---|
-| No license activated | Hub shows a banner: *"No license — activate to remove this notice"*. All features work normally. |
-| License expired | Hub shows a banner: *"License expired"*. All features continue to work. |
-| Seat limit exceeded | Hub prevents creating new users but existing users are unaffected. |
+| Stage | Trigger | Behaviour |
+|---|---|---|
+| **Grace period** | No license key, first 14 days | Full features, maximum 3 users |
+| **Licensed** | Valid key, > 30 days to expiry | Full features, seat-enforced |
+| **Warning** | Valid key, ≤ 30 days to expiry | Full features + countdown banners in Hub, PIKA, and VERA |
+| **Soft lockdown** | Expired < 30 days, or grace ended | Read-only — uploads and new queries return `402` |
+| **Hard lockdown** | Expired ≥ 30 days | Admin-only access — all endpoints blocked except `/health`, auth, and the license page |
 
 !!! tip
-    Soft enforcement means you can evaluate the full suite before purchasing. There are no feature gates or time-bombs.
+    The 14-day grace period lets you evaluate the full suite before purchasing. After that, graduated enforcement gives you at least 30 additional days of read-only access before hard lockdown — and your data is always preserved.
 
 ## Seat Enforcement
 
