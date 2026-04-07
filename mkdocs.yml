@@ -4,6 +4,7 @@ site_description: Documentation for the ai.doo self-hosted AI suite — PIKA, VE
 
 theme:
   name: material
+  custom_dir: overrides
   palette:
     - scheme: default
       primary: blue
@@ -63,6 +64,8 @@ nav:
   - EULA: eula.md
 
 extra:
+  analytics:
+    provider: custom
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/aidoo-systems

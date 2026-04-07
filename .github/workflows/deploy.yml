@@ -52,6 +52,7 @@
               --exclude='api/' \
               --exclude='docs/' \
               --exclude='mkdocs.yml' \
+              --exclude='overrides/' \
               --exclude='_docs_build/' \
               ./ ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/aidoo.biz/
 
