@@ -7,6 +7,14 @@ All API endpoints are served under the `/api/v1` prefix unless otherwise noted. 
 
 ## Health and Status
 
+### `GET /health`
+
+Lightweight liveness probe for load balancers and infrastructure monitors. Always returns `{"status": "ok"}` if the process is running. Use this for container/pod readiness and liveness checks; use `/api/v1/health` when you need the full dependency status.
+
+**Authentication:** None required
+
+---
+
 ### `GET /api/v1/health`
 
 Full health check of PIKA and its dependencies.
