@@ -32,8 +32,22 @@ cd ollama
 | `--no-gpu` | Skip GPU detection, use CPU mode |
 | `--products pika,vera` | Skip product selection prompt |
 | `--password <pass>` | Set admin password (skip interactive prompt) |
-| `--domain example.com` | Set domain for reverse proxy |
+| `--with-caddy` | Add Caddy reverse proxy with automatic HTTPS |
+| `--domain example.com` | Base domain for Caddy subdomains (requires `--with-caddy`) |
+| `--acme-email admin@example.com` | Email for Let's Encrypt notifications |
 | `--yes` | Accept all defaults (non-interactive) |
+
+### HTTPS with Caddy
+
+To deploy with automatic TLS and hostname routing:
+
+```bash
+./scripts/install.sh --with-caddy --domain example.com --acme-email admin@example.com
+```
+
+This generates a Caddyfile with `hub.example.com`, `pika.example.com`, and `vera.example.com` subdomains, binds all service ports to `127.0.0.1` (so only Caddy is publicly reachable), and configures VERA's CORS and API URLs for HTTPS.
+
+**Prerequisites:** DNS A records for all three subdomains must point to the server, and ports 80/443 must be open.
 
 ## Directory Structure
 
@@ -43,6 +57,7 @@ After installation, your `~/aidoo/` directory will contain:
 ~/aidoo/
 ├── .env                 # Environment variables
 ├── docker-compose.yml   # Stack definition
+├── Caddyfile            # Reverse proxy config (if --with-caddy)
 ├── secrets/             # Docker secrets
 │   ├── hub_admin_password
 │   ├── hub_auth_api_key
@@ -58,7 +73,7 @@ After installation, your `~/aidoo/` directory will contain:
 
 After installation:
 
-1. Open Hub at `http://your-server:2000` and log in with your admin credentials
+1. Open Hub at `http://your-server:2000` (or `https://hub.example.com` with Caddy) and log in with your admin credentials
 2. Pull a model from the Models tab (e.g. `llama3.2:3b`)
 3. Activate your license key in the License tab
 4. Open PIKA at `:8000` or VERA at `:3000` and log in with your Hub credentials

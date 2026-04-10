@@ -2,17 +2,26 @@
 
 A reverse proxy terminates TLS and routes traffic to the ai.doo services. **Caddy** is recommended for its automatic HTTPS, but an nginx configuration is also provided.
 
+!!! tip "Quick start"
+    If you used the installer with `--with-caddy`, the Caddyfile and compose overlay are already generated. You only need to ensure DNS records and firewall rules are in place.
+
 ## Service Ports
 
-| Service | Internal Port | Suggested Public Path |
-|---|---|---|
-| Hub | 8000 | `hub.example.com` |
-| PIKA | 8000 | `pika.example.com` |
-| VERA frontend | 3000 | `vera.example.com` |
-| VERA backend | 8000 | `vera.example.com/api/*` |
+| Service | Internal Port | Container Name | Suggested Public Path |
+|---|---|---|---|
+| Hub | 8000 | `hub` | `hub.example.com` |
+| PIKA | 8000 | `pika` / `pika-app` | `pika.example.com` |
+| VERA frontend | 3000 | `vera-frontend` | `vera.example.com` |
+| VERA backend | 8000 | `vera-backend` | `vera.example.com/api/*` |
 
-!!! warning
-    Never expose Ollama (port 11434) to the public internet. It has no authentication. Only the Docker bridge network (`ollama_network`) should be able to reach it.
+!!! danger
+    **Never expose Ollama (port 11434) to the public internet.** It has no authentication. Only the Docker bridge network (`ollama_network`) should be able to reach it. See the [firewall guide](https://github.com/aidoo-biz/ollama/blob/master/deploy/reference/firewall.md) for details.
+
+## Prerequisites
+
+1. **DNS A records** — point `hub.example.com`, `pika.example.com`, and `vera.example.com` to your server's public IP
+2. **Ports 80 and 443 open** — Caddy needs port 80 for the ACME HTTP-01 challenge and HTTP→HTTPS redirect
+3. **Docker network** — the proxy must be on the `ollama_network` bridge to reach the services
 
 ## Caddy (Recommended)
 
@@ -23,47 +32,68 @@ Caddy obtains and renews TLS certificates automatically via Let's Encrypt.
 ```caddyfile
 {
     email admin@example.com
+    servers {
+        protocols h1 h2 h3
+    }
+}
+
+# Shared security headers
+(security_headers) {
+    header {
+        Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+        X-Content-Type-Options    "nosniff"
+        X-Frame-Options           "DENY"
+        Referrer-Policy           "strict-origin-when-cross-origin"
+        Permissions-Policy        "camera=(), microphone=(), geolocation=()"
+        -Server
+    }
 }
 
 hub.example.com {
-    reverse_proxy hub:8000
+    import security_headers
+    header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'"
 
-    header {
-        Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
-        X-Content-Type-Options "nosniff"
-        X-Frame-Options "DENY"
-        Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"
-        Referrer-Policy "strict-origin-when-cross-origin"
+    reverse_proxy hub:8000 {
+        flush_interval -1        # required for SSE model-pull streaming
+        header_up X-Forwarded-Proto {scheme}
     }
 }
 
 pika.example.com {
-    reverse_proxy pika:8000
+    import security_headers
+    header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'"
 
-    header {
-        Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
-        X-Content-Type-Options "nosniff"
-        X-Frame-Options "DENY"
-        Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"
-        Referrer-Policy "strict-origin-when-cross-origin"
+    reverse_proxy pika:8000 {
+        flush_interval -1        # required for SSE query streaming
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    request_body {
+        max_size 100MB           # document uploads
     }
 }
 
 vera.example.com {
+    import security_headers
+    header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://vera.example.com"
+
     handle /api/* {
-        reverse_proxy backend:8000
+        reverse_proxy vera-backend:8000 {
+            flush_interval -1    # required for SSE status streaming
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+
+    handle /internal/* {
+        respond "Not Found" 404  # block internal endpoints
     }
 
     handle {
-        reverse_proxy frontend:3000
+        reverse_proxy vera-frontend:3000
     }
 
-    header {
-        Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
-        X-Content-Type-Options "nosniff"
-        X-Frame-Options "SAMEORIGIN"
-        Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:"
-        Referrer-Policy "strict-origin-when-cross-origin"
+    request_body {
+        max_size 25MB            # matches VERA's MAX_UPLOAD_MB default
     }
 }
 ```
@@ -80,6 +110,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "443:443/udp"   # HTTP/3
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
@@ -100,15 +131,74 @@ volumes:
 Start it with:
 
 ```bash
-docker compose -f docker-compose.caddy.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
 ```
 
 !!! note
     Caddy must be on the same Docker network as the services it proxies. The `ollama_network` bridge is shared by all ai.doo services.
 
+## Using Your Existing Reverse Proxy
+
+If you already run nginx, Traefik, HAProxy, or a cloud load balancer, you don't need Caddy. Configure your proxy with these requirements:
+
+### X-Forwarded Headers
+
+All ai.doo services check `X-Forwarded-Proto` to determine whether the original request was HTTPS. This is critical because:
+
+- **Secure cookies** — Hub, PIKA, and VERA set `secure=true` on session cookies. If `X-Forwarded-Proto: https` is missing, the cookie won't be sent on subsequent requests and users can't log in
+- **CSRF validation** — VERA's CSRF middleware checks the origin against the forwarded scheme
+
+Your proxy **must** set:
+
+```
+X-Forwarded-Proto: https
+X-Forwarded-For: <client-ip>
+X-Real-IP: <client-ip>
+Host: <original-host>
+```
+
+### SSE Streaming
+
+PIKA, VERA, and Hub use Server-Sent Events (SSE) for real-time updates:
+
+| Service | SSE Endpoint | Purpose |
+|---|---|---|
+| Hub | `GET /api/models/pull/stream` | Model download progress |
+| PIKA | `GET /api/v1/query/stream` | Streaming query responses |
+| VERA | `GET /documents/{id}/status/stream` | Document processing status |
+
+SSE requires:
+
+- **No response buffering** — the proxy must flush each chunk immediately. In nginx: `proxy_buffering off;`. In Caddy: `flush_interval -1`
+- **Long timeouts** — SSE connections stay open. Set `proxy_read_timeout 300s` or higher in nginx
+- **No gzip on `text/event-stream`** — some proxies compress SSE responses, breaking the streaming protocol. Exclude `text/event-stream` from compression
+
+### Upload Body Size
+
+| Service | Default Max Upload | Config Variable |
+|---|---|---|
+| PIKA | 100 MB | `MAX_UPLOAD_SIZE` |
+| VERA | 25 MB | `MAX_UPLOAD_MB` |
+
+Your proxy's `client_max_body_size` (nginx) or `request_body max_size` (Caddy) must match or exceed these values, or uploads will fail with a `413 Request Entity Too Large` before reaching the application.
+
+### CORS
+
+VERA's frontend (`vera.example.com`) makes API calls to the backend, which is routed through the same hostname at `/api/*`. If your proxy separates them onto different origins, you must configure VERA's `CORS_ORIGINS` environment variable to include the frontend's origin.
+
+### Health Check Endpoints
+
+For load balancer health probes:
+
+| Service | Health Endpoint |
+|---|---|
+| Hub | `GET /health` |
+| PIKA | `GET /health` (lightweight) or `GET /api/v1/health` (detailed) |
+| VERA | `GET /health` |
+
 ## nginx
 
-If you prefer nginx, here is an equivalent configuration.
+If you prefer nginx, here is an equivalent configuration:
 
 ```nginx
 upstream hub {
@@ -120,11 +210,11 @@ upstream pika {
 }
 
 upstream vera_api {
-    server backend:8000;
+    server vera-backend:8000;
 }
 
 upstream vera_frontend {
-    server frontend:3000;
+    server vera-frontend:3000;
 }
 
 server {
@@ -144,6 +234,11 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+
+        # SSE streaming support
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_read_timeout 300s;
     }
 }
 
@@ -153,6 +248,8 @@ server {
 
     ssl_certificate     /etc/letsencrypt/live/pika.example.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/pika.example.com/privkey.pem;
+
+    client_max_body_size 100M;
 
     add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
     add_header X-Content-Type-Options "nosniff" always;
@@ -164,6 +261,11 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+
+        # SSE streaming support
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_read_timeout 300s;
     }
 }
 
@@ -173,6 +275,8 @@ server {
 
     ssl_certificate     /etc/letsencrypt/live/vera.example.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/vera.example.com/privkey.pem;
+
+    client_max_body_size 25M;
 
     add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
     add_header X-Content-Type-Options "nosniff" always;
@@ -184,6 +288,16 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+
+        # SSE streaming support
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_read_timeout 300s;
+    }
+
+    # Block internal endpoints
+    location /internal/ {
+        return 404;
     }
 
     location / {
@@ -195,7 +309,7 @@ server {
     }
 }
 
-# Redirect HTTP → HTTPS
+# Redirect HTTP to HTTPS
 server {
     listen 80;
     server_name hub.example.com pika.example.com vera.example.com;
@@ -217,6 +331,29 @@ Both configurations above include these recommended headers:
 | `X-Frame-Options` | `DENY` / `SAMEORIGIN` | Prevent clickjacking |
 | `Content-Security-Policy` | App-specific | Restrict script/style sources |
 | `Referrer-Policy` | `strict-origin-when-cross-origin` | Limit referrer information |
+| `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` | Disable unnecessary browser APIs |
 
 !!! note
-    VERA uses `SAMEORIGIN` for `X-Frame-Options` and a more permissive CSP because the Next.js frontend may require `unsafe-eval` for certain features. The production Docker image uses a standalone build, but some Next.js runtime features still need `unsafe-eval`.
+    VERA uses `SAMEORIGIN` for `X-Frame-Options` and a more permissive CSP because the Next.js frontend requires `unsafe-eval` for the standalone build.
+
+## Troubleshooting
+
+### "Can't log in" / session cookie not persisting
+
+Your proxy is not sending `X-Forwarded-Proto: https`. The application sets `secure=true` on cookies, so the browser will only send them over HTTPS. Verify the header reaches the backend:
+
+```bash
+curl -v https://hub.example.com/health 2>&1 | grep -i forwarded
+```
+
+### SSE streaming not working / responses arrive all at once
+
+Your proxy is buffering the response. Disable buffering for SSE endpoints (see the SSE section above).
+
+### "413 Request Entity Too Large" on uploads
+
+Your proxy's body size limit is smaller than the file being uploaded. Increase `client_max_body_size` (nginx) or `request_body max_size` (Caddy).
+
+### VERA API calls fail with CORS errors
+
+The frontend origin doesn't match the CORS allowlist. Set `CORS_ORIGINS` in VERA's environment to include the frontend URL (e.g., `https://vera.example.com`).
